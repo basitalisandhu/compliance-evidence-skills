@@ -6,14 +6,14 @@
     "url": "https://github.com/basitalisandhu"
   },
   "metadata": {
-    "version": "0.1.0"
+    "version": "0.1.1"
   },
   "plugins": [
     {
       "name": "compliance-evidence",
       "source": "./plugins/compliance-evidence",
       "description": "Five compliance evidence skills: evidence pack builder, control map from exports, GitHub change-control evidence, AWS identity and logging evidence, auditor narrative drafter. Exports on disk, offline evaluation, three result states.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "author": {"name": "Muhammad Basit Ali", "url": "https://github.com/basitalisandhu"},
       "homepage": "https://github.com/basitalisandhu/compliance-evidence-skills",
       "repository": "https://github.com/basitalisandhu/compliance-evidence-skills",
