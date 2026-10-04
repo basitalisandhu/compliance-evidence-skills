@@ -4,7 +4,7 @@ All notable changes to this project are documented here. The format follows Keep
 
 ## [Unreleased]
 
-## [0.1.0] - 2026-10-05
+## [0.1.0] - 2026-10-04
 
 ### Added
 
