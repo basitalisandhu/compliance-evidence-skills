@@ -1,0 +1,54 @@
+[
+  {
+    "number": 201,
+    "author": {
+      "login": "dev-alice"
+    },
+    "mergedAt": "2026-07-20T11:00:00Z",
+    "mergedBy": {
+      "login": "dev-alice"
+    },
+    "reviewDecision": "APPROVED",
+    "reviews": [
+      {
+        "author": {
+          "login": "dev-bob"
+        },
+        "state": "APPROVED",
+        "submittedAt": "2026-07-20T01:00:00Z"
+      }
+    ]
+  },
+  {
+    "number": 202,
+    "author": {
+      "login": "dev-dave"
+    },
+    "mergedAt": "2026-08-11T17:45:00Z",
+    "mergedBy": {
+      "login": "dev-dave"
+    },
+    "reviewDecision": "",
+    "reviews": []
+  },
+  {
+    "number": 203,
+    "author": {
+      "login": "dev-erin"
+    },
+    "mergedAt": "2026-09-03T16:20:00Z",
+    "mergedBy": {
+      "login": "dev-erin"
+    },
+    "reviewDecision": "REVIEW_REQUIRED",
+    "reviews": [
+      {
+        "author": {
+          "login": "dev-alice"
+        },
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-03T16:20:00Z"
+      }
+    ]
+  }
+]

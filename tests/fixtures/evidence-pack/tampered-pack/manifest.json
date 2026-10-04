@@ -1,0 +1,208 @@
+{
+  "schema": "compliance-evidence-pack/1",
+  "tool": "evidence_pack.py 0.1.0",
+  "built_at": "2026-10-05T00:00:00Z",
+  "mode": "copy",
+  "source_root": null,
+  "collector": "jane.doe@example.com",
+  "scope": "GitHub repository example-org/payments-api (branch main), AWS account 123456789012, Microsoft 365 tenant example.com",
+  "period": {
+    "start": "2026-07-01",
+    "end": "2026-09-30"
+  },
+  "notes": "",
+  "file_count": 17,
+  "files": [
+    {
+      "path": "aws/account-summary.json",
+      "sha256": "58495fedbb5143b8bb4ece8e03215e60807fe959dbd4cf02d40a64c4ac2ba4a7",
+      "bytes": 125,
+      "source_system": "aws",
+      "command": "aws iam get-account-summary --output json",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-01T09:30:00Z",
+      "file_mtime": "2026-10-04T13:22:34Z",
+      "date_basis": "sidecar"
+    },
+    {
+      "path": "aws/cloudtrail-status-org-trail.json",
+      "sha256": "b6ee96e68c72ea6451c11b7370f1730dc8ad5533ef09e00ebafaedd3b8c9c400",
+      "bytes": 135,
+      "source_system": "aws",
+      "command": "aws cloudtrail get-trail-status --name arn:aws:cloudtrail:us-east-1:123456789012:trail/org-trail --output json",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-01T09:30:00Z",
+      "file_mtime": "2026-10-04T13:22:34Z",
+      "date_basis": "sidecar"
+    },
+    {
+      "path": "aws/cloudtrail-trails.json",
+      "sha256": "bf111d58e83a079092c3e63947270411adc8db31c6f5ca6b62a0fd9e3111392d",
+      "bytes": 416,
+      "source_system": "aws",
+      "command": "aws cloudtrail describe-trails --output json",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-01T09:30:00Z",
+      "file_mtime": "2026-10-04T13:22:34Z",
+      "date_basis": "sidecar"
+    },
+    {
+      "path": "aws/credential-report.csv",
+      "sha256": "315e7d770a737dd105a2656ef5e066275a1ef3b23bba48874b924fe35e7c4729",
+      "bytes": 1049,
+      "source_system": "aws",
+      "command": "aws iam get-credential-report --query Content --output text | base64 --decode",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-01T09:30:00Z",
+      "file_mtime": "2026-10-04T13:22:34Z",
+      "date_basis": "sidecar"
+    },
+    {
+      "path": "aws/password-policy.json",
+      "sha256": "116ee87e7052f714009cae8cc5615e19fe7285d1166a1f1fae259b7800e71f5f",
+      "bytes": 90,
+      "source_system": "aws",
+      "command": "aws iam get-account-password-policy --output json",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-01T09:30:00Z",
+      "file_mtime": "2026-10-04T13:22:34Z",
+      "date_basis": "sidecar"
+    },
+    {
+      "path": "aws/regions/us-east-1/backup-plans.json",
+      "sha256": "4155a9b0d35d21a261ce2b44317b5bb727036e684657ad4f9a440d920944c16c",
+      "bytes": 28,
+      "source_system": "aws",
+      "command": "aws backup list-backup-plans --region us-east-1 --output json",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-01T09:30:00Z",
+      "file_mtime": "2026-10-04T13:22:34Z",
+      "date_basis": "sidecar"
+    },
+    {
+      "path": "aws/regions/us-east-1/config-recorder-status.json",
+      "sha256": "1da19d6b50486d2bf0add71155e7d8c42d33f0cf0ebd3420689a8d30989451f9",
+      "bytes": 136,
+      "source_system": "aws",
+      "command": "aws configservice describe-configuration-recorder-status --region us-east-1 --output json",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-01T09:30:00Z",
+      "file_mtime": "2026-10-04T13:22:34Z",
+      "date_basis": "sidecar"
+    },
+    {
+      "path": "aws/s3control-public-access-block.json",
+      "sha256": "a01009f8abee2f4e461987b8451484525ebd391f45cfa0ff344950a32a15c764",
+      "bytes": 170,
+      "source_system": "aws",
+      "command": "aws s3control get-public-access-block --account-id 123456789012 --output json",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-01T09:30:00Z",
+      "file_mtime": "2026-10-04T13:22:34Z",
+      "date_basis": "sidecar"
+    },
+    {
+      "path": "github/branch-protection.json",
+      "sha256": "5cbae6b1369452e404e715ef61b189ceace1f31306e7f2a316a23a05399aa5a9",
+      "bytes": 834,
+      "source_system": "github",
+      "command": "gh api repos/example-org/payments-api/branches/main/protection",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-01T09:30:00Z",
+      "file_mtime": "2026-10-04T13:22:34Z",
+      "date_basis": "sidecar"
+    },
+    {
+      "path": "github/codeowners.json",
+      "sha256": "0246287857e674884da408d22663050f0d4ccee18ddd0f2a81f9d0bc48b37c2e",
+      "bytes": 269,
+      "source_system": "github",
+      "command": "gh api repos/example-org/payments-api/contents/.github/CODEOWNERS",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-01T09:30:00Z",
+      "file_mtime": "2026-10-04T13:22:34Z",
+      "date_basis": "sidecar"
+    },
+    {
+      "path": "github/dependabot-alerts.json",
+      "sha256": "d6a243bea9c2e0f036bb5f30a7abf44424cc2e85b6a1305331ac00a4e2033075",
+      "bytes": 754,
+      "source_system": "github",
+      "command": "gh api --paginate \"repos/example-org/payments-api/dependabot/alerts?state=open&per_page=100\"",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-01T09:30:00Z",
+      "file_mtime": "2026-10-04T13:22:34Z",
+      "date_basis": "sidecar"
+    },
+    {
+      "path": "github/pulls-merged.json",
+      "sha256": "99a1fdcd43f527006f0c38520e3eb132180b4540791240436bd291787f3e5bf3",
+      "bytes": 1508,
+      "source_system": "github",
+      "command": "gh pr list --repo example-org/payments-api --state merged --base main --limit 1000 --json number,author,mergedAt,mergedBy,reviewDecision,reviews",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-01T09:35:00Z",
+      "file_mtime": "2026-10-04T13:22:34Z",
+      "date_basis": "sidecar"
+    },
+    {
+      "path": "github/repo.json",
+      "sha256": "64bb76d1773b8acb5d71d05b3f309aca8eb15e65479d28f61ac665ee5c270be7",
+      "bytes": 462,
+      "source_system": "github",
+      "command": "gh api repos/example-org/payments-api",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-01T09:30:00Z",
+      "file_mtime": "2026-10-04T13:22:34Z",
+      "date_basis": "sidecar"
+    },
+    {
+      "path": "github/vulnerability-alerts.http",
+      "sha256": "2e7ea52d98a61748079ef883f605452b12b6991e1d2e3c637df6839dc7a78146",
+      "bytes": 98,
+      "source_system": "github",
+      "command": "gh api -i repos/example-org/payments-api/vulnerability-alerts",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-01T09:30:00Z",
+      "file_mtime": "2026-10-04T13:22:34Z",
+      "date_basis": "sidecar"
+    },
+    {
+      "path": "m365/conditional-access-policies.json",
+      "sha256": "a3cc5d9fd24d6220eaa20012b242594e9a9c83933c7e2c10448073f9d9ddea5e",
+      "bytes": 1267,
+      "source_system": "m365",
+      "command": "mgc identity conditional-access policies list --output json",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-01T09:30:00Z",
+      "file_mtime": "2026-10-04T13:22:34Z",
+      "date_basis": "sidecar"
+    },
+    {
+      "path": "m365/intune-compliance-policies.json",
+      "sha256": "34c5e11f37534eee64bdf75f2e58c2fd498d04e4d04f2999cf37bb78bee8cf3e",
+      "bytes": 358,
+      "source_system": "m365",
+      "command": "",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-01T09:30:00Z",
+      "file_mtime": "2026-10-04T13:22:34Z",
+      "date_basis": "sidecar"
+    },
+    {
+      "path": "m365/security-defaults.json",
+      "sha256": "84d7d0a191faeca078ab3441677344191a18970557e3b8d9ca9c1d1a4faa9615",
+      "bytes": 236,
+      "source_system": "m365",
+      "command": "mgc policies identity-security-defaults-enforcement-policy get --output json",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-01T09:30:00Z",
+      "file_mtime": "2026-10-04T13:22:34Z",
+      "date_basis": "sidecar"
+    }
+  ],
+  "gaps": [
+    "m365/intune-compliance-policies.json: no export command recorded; the assessor cannot repeat this export"
+  ],
+  "disclaimer": "Preparation for a human assessor: this is not an audit opinion, an attestation or a certification, and not legal advice. Every result comes from exported files and needs review by the assessor."
+}

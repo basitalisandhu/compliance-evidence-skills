@@ -1,0 +1,24 @@
+{
+  "url": "https://api.github.com/repos/example-org/payments-api/branches/main/protection",
+  "required_status_checks": {
+    "strict": false,
+    "contexts": [],
+    "checks": []
+  },
+  "enforce_admins": {
+    "enabled": false
+  },
+  "required_pull_request_reviews": {
+    "dismiss_stale_reviews": false,
+    "required_approving_review_count": 0
+  },
+  "required_signatures": {
+    "enabled": false
+  },
+  "allow_force_pushes": {
+    "enabled": true
+  },
+  "allow_deletions": {
+    "enabled": false
+  }
+}

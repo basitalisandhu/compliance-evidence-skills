@@ -1,0 +1,6 @@
+# Thresholds for github_evidence.py (example)
+min_reviews: 1
+min_signed_ratio: 1.0
+vuln_sla_days: {critical: 15, high: 30}
+secret_alert_sla_days: 7
+period: {start: 2026-07-01, end: 2026-09-30}

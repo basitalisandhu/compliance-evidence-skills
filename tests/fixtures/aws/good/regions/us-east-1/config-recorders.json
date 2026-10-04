@@ -1,0 +1,12 @@
+{
+  "ConfigurationRecorders": [
+    {
+      "name": "default",
+      "roleARN": "arn:aws:iam::123456789012:role/aws-config-role",
+      "recordingGroup": {
+        "allSupported": true,
+        "includeGlobalResourceTypes": true
+      }
+    }
+  ]
+}

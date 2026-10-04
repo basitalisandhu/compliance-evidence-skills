@@ -1,0 +1,36 @@
+[
+  {
+    "number": 3,
+    "state": "open",
+    "created_at": "2026-06-01T08:00:00Z",
+    "security_advisory": {
+      "ghsa_id": "GHSA-xxxx-0000-0003",
+      "severity": "critical",
+      "summary": "Example critical advisory"
+    },
+    "security_vulnerability": {
+      "severity": "critical",
+      "package": {
+        "ecosystem": "pip",
+        "name": "example-parser"
+      }
+    }
+  },
+  {
+    "number": 4,
+    "state": "open",
+    "created_at": "2026-09-30T08:00:00Z",
+    "security_advisory": {
+      "ghsa_id": "GHSA-xxxx-0000-0004",
+      "severity": "high",
+      "summary": "Example recent advisory"
+    },
+    "security_vulnerability": {
+      "severity": "high",
+      "package": {
+        "ecosystem": "pip",
+        "name": "example-client"
+      }
+    }
+  }
+]

@@ -1,0 +1,88 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate marketplace, plugin and skills
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: "3.11"
+      - name: Structure, frontmatter, scripts, README and house style
+        run: python3 scripts/validate_plugins.py
+
+  tests:
+    name: Tests and lint
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python3 -m pip install pytest ruff
+      - run: python3 -m ruff check .
+      - run: python3 -m pytest -q
+      - name: Every script answers --help
+        run: for s in plugins/compliance-evidence/skills/*/scripts/[a-z]*.py; do python3 "$s" --help > /dev/null; done
+
+  container-build:
+    name: Build the container image and run it
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Build the image, print --help, run each subcommand's --help, run two fixtures and check the user
+        run: |
+          docker build --build-arg VERSION=ci -t compliance-evidence-skills:ci .
+          docker run --rm compliance-evidence-skills:ci --help > help.txt && grep "^usage: compliance-evidence <subcommand>" help.txt
+          docker run --rm compliance-evidence-skills:ci > /dev/null && grep -c "^  [a-z]" help.txt
+          for s in pack map github aws narrative narrative-lint; do docker run --rm compliance-evidence-skills:ci "$s" --help > /dev/null; done
+          docker run --rm compliance-evidence-skills:ci --version
+          docker run --rm -v "$PWD/tests/fixtures:/work:ro" compliance-evidence-skills:ci github github/protected --as-of 2026-10-05 > /dev/null
+          rc=0; docker run --rm -v "$PWD/tests/fixtures:/work:ro" compliance-evidence-skills:ci pack verify evidence-pack/tampered-pack > /dev/null || rc=$?; test "$rc" = 1
+          test "$(docker run --rm --entrypoint id compliance-evidence-skills:ci -u)" = "1000"
+          test "$(docker run --rm --entrypoint pwd compliance-evidence-skills:ci)" = "/work"
+
+  claude-plugin-validate:
+    name: claude plugin validate --strict
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: "22"
+      - name: Install the Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+      - name: Validate the marketplace and the plugin
+        run: |
+          claude plugin validate --strict .
+          claude plugin validate --strict ./plugins/compliance-evidence

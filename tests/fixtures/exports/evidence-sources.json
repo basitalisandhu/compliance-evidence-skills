@@ -1,0 +1,76 @@
+{
+  "collector": "jane.doe@example.com",
+  "collected_at": "2026-10-01T09:30:00Z",
+  "scope": "GitHub repository example-org/payments-api (branch main), AWS account 123456789012, Microsoft 365 tenant example.com",
+  "period": {
+    "start": "2026-07-01",
+    "end": "2026-09-30"
+  },
+  "files": {
+    "github/repo.json": {
+      "source_system": "github",
+      "command": "gh api repos/example-org/payments-api"
+    },
+    "github/branch-protection.json": {
+      "source_system": "github",
+      "command": "gh api repos/example-org/payments-api/branches/main/protection"
+    },
+    "github/vulnerability-alerts.http": {
+      "source_system": "github",
+      "command": "gh api -i repos/example-org/payments-api/vulnerability-alerts"
+    },
+    "github/dependabot-alerts.json": {
+      "source_system": "github",
+      "command": "gh api --paginate \"repos/example-org/payments-api/dependabot/alerts?state=open&per_page=100\""
+    },
+    "github/pulls-merged.json": {
+      "source_system": "github",
+      "command": "gh pr list --repo example-org/payments-api --state merged --base main --limit 1000 --json number,author,mergedAt,mergedBy,reviewDecision,reviews",
+      "collected_at": "2026-10-01T09:35:00Z"
+    },
+    "github/codeowners.json": {
+      "source_system": "github",
+      "command": "gh api repos/example-org/payments-api/contents/.github/CODEOWNERS"
+    },
+    "aws/account-summary.json": {
+      "source_system": "aws",
+      "command": "aws iam get-account-summary --output json"
+    },
+    "aws/credential-report.csv": {
+      "source_system": "aws",
+      "command": "aws iam get-credential-report --query Content --output text | base64 --decode"
+    },
+    "aws/password-policy.json": {
+      "source_system": "aws",
+      "command": "aws iam get-account-password-policy --output json"
+    },
+    "aws/cloudtrail-trails.json": {
+      "source_system": "aws",
+      "command": "aws cloudtrail describe-trails --output json"
+    },
+    "aws/cloudtrail-status-org-trail.json": {
+      "source_system": "aws",
+      "command": "aws cloudtrail get-trail-status --name arn:aws:cloudtrail:us-east-1:123456789012:trail/org-trail --output json"
+    },
+    "aws/s3control-public-access-block.json": {
+      "source_system": "aws",
+      "command": "aws s3control get-public-access-block --account-id 123456789012 --output json"
+    },
+    "aws/regions/us-east-1/config-recorder-status.json": {
+      "source_system": "aws",
+      "command": "aws configservice describe-configuration-recorder-status --region us-east-1 --output json"
+    },
+    "aws/regions/us-east-1/backup-plans.json": {
+      "source_system": "aws",
+      "command": "aws backup list-backup-plans --region us-east-1 --output json"
+    },
+    "m365/security-defaults.json": {
+      "source_system": "m365",
+      "command": "mgc policies identity-security-defaults-enforcement-policy get --output json"
+    },
+    "m365/conditional-access-policies.json": {
+      "source_system": "m365",
+      "command": "mgc identity conditional-access policies list --output json"
+    }
+  }
+}

@@ -1,0 +1,81 @@
+[
+  {
+    "number": 101,
+    "author": {
+      "login": "dev-alice"
+    },
+    "mergedAt": "2026-07-14T15:02:11Z",
+    "mergedBy": {
+      "login": "dev-bob"
+    },
+    "reviewDecision": "APPROVED",
+    "reviews": [
+      {
+        "author": {
+          "login": "dev-bob"
+        },
+        "state": "APPROVED",
+        "submittedAt": "2026-07-14T05:02:11Z"
+      }
+    ]
+  },
+  {
+    "number": 102,
+    "author": {
+      "login": "dev-bob"
+    },
+    "mergedAt": "2026-08-02T10:40:00Z",
+    "mergedBy": {
+      "login": "dev-bob"
+    },
+    "reviewDecision": "APPROVED",
+    "reviews": [
+      {
+        "author": {
+          "login": "dev-alice"
+        },
+        "state": "APPROVED",
+        "submittedAt": "2026-08-02T00:40:00Z"
+      }
+    ]
+  },
+  {
+    "number": 103,
+    "author": {
+      "login": "dev-carol"
+    },
+    "mergedAt": "2026-09-18T12:15:30Z",
+    "mergedBy": {
+      "login": "dev-carol"
+    },
+    "reviewDecision": "APPROVED",
+    "reviews": [
+      {
+        "author": {
+          "login": "dev-alice"
+        },
+        "state": "APPROVED",
+        "submittedAt": "2026-09-18T02:15:30Z"
+      },
+      {
+        "author": {
+          "login": "dev-bob"
+        },
+        "state": "APPROVED",
+        "submittedAt": "2026-09-18T02:15:30Z"
+      }
+    ]
+  },
+  {
+    "number": 90,
+    "author": {
+      "login": "dev-alice"
+    },
+    "mergedAt": "2026-06-20T09:00:00Z",
+    "mergedBy": {
+      "login": "dev-alice"
+    },
+    "reviewDecision": "APPROVED",
+    "reviews": []
+  }
+]

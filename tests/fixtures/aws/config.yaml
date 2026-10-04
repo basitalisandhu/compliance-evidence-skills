@@ -1,0 +1,4 @@
+# Thresholds for aws_evidence.py (example)
+max_key_age_days: 90
+min_password_length: 14
+regions: [us-east-1, eu-west-1]

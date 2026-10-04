@@ -1,0 +1,36 @@
+[
+  {
+    "number": 7,
+    "state": "open",
+    "created_at": "2026-09-28T08:00:00Z",
+    "security_advisory": {
+      "ghsa_id": "GHSA-xxxx-0000-0007",
+      "severity": "high",
+      "summary": "Example advisory"
+    },
+    "security_vulnerability": {
+      "severity": "high",
+      "package": {
+        "ecosystem": "npm",
+        "name": "example-lib"
+      }
+    }
+  },
+  {
+    "number": 5,
+    "state": "open",
+    "created_at": "2026-05-01T08:00:00Z",
+    "security_advisory": {
+      "ghsa_id": "GHSA-xxxx-0000-0005",
+      "severity": "low",
+      "summary": "Example low advisory"
+    },
+    "security_vulnerability": {
+      "severity": "low",
+      "package": {
+        "ecosystem": "npm",
+        "name": "example-util"
+      }
+    }
+  }
+]

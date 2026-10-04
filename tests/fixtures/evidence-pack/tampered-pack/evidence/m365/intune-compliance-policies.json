@@ -1,0 +1,14 @@
+{
+  "value": [
+    {
+      "id": "00000000-0000-0000-0000-0000000000d1",
+      "displayName": "Windows baseline",
+      "@odata.type": "#microsoft.graph.windows10CompliancePolicy"
+    },
+    {
+      "id": "00000000-0000-0000-0000-0000000000d2",
+      "displayName": "macOS baseline",
+      "@odata.type": "#microsoft.graph.macOSCompliancePolicy"
+    }
+  ]
+}

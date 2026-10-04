@@ -1,0 +1,10 @@
+{
+  "BackupPlansList": [
+    {
+      "BackupPlanName": "daily-35-days",
+      "BackupPlanId": "00000000-0000-0000-0000-0000000000b1",
+      "BackupPlanArn": "arn:aws:backup:us-east-1:123456789012:backup-plan:00000000-0000-0000-0000-0000000000b1",
+      "VersionId": "example-version-1"
+    }
+  ]
+}

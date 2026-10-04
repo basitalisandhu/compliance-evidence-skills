@@ -1,0 +1,8 @@
+# Only the dispatcher, the skill scripts and their references go into the image.
+*
+!LICENSE
+!README.md
+!pyproject.toml
+!scripts/cli.py
+!plugins/*/skills/*/scripts/*.py
+!plugins/*/skills/*/references/*

@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Local exports, packs and reports: never commit evidence from a real organisation.
+# Every rule is anchored to the repository root so that no skill folder or test fixture can match it.
+/evidence-20[0-9][0-9]*/
+/pack-20[0-9][0-9]*/
+/control-map-*.json
+/narrative-*.md
+/*-rows.json
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/

@@ -1,0 +1,912 @@
+{
+  "framework": "iso27001",
+  "as_of": "2026-10-05",
+  "pack": "example-pack",
+  "pack_built_at": "2026-10-05T00:00:00Z",
+  "rule": "A control is supported only when every mapped check is supported; any contradicted check makes it contradicted; otherwise not assessable.",
+  "summary": {
+    "supported": 9,
+    "contradicted": 3,
+    "not assessable": 5
+  },
+  "controls": [
+    {
+      "id": "A.5.1",
+      "topic": "Security policies exist, are approved and reach the people they apply to",
+      "state": "not assessable",
+      "checks": [],
+      "citations": [],
+      "gaps": [
+        "no check in the map reads an export for this control; it needs other evidence (documents, interviews, samples)"
+      ]
+    },
+    {
+      "id": "A.5.15",
+      "topic": "Access to systems and data follows defined rules",
+      "state": "supported",
+      "checks": [
+        {
+          "id": "aws-s3-account-public-access-block",
+          "describes": "All four account-level S3 public access block settings are on",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "aws/s3control-public-access-block.json",
+              "field": "PublicAccessBlockConfiguration",
+              "value": {
+                "BlockPublicAcls": true,
+                "IgnorePublicAcls": true,
+                "BlockPublicPolicy": true,
+                "RestrictPublicBuckets": true
+              },
+              "sha256": "a01009f8abee2f4e461987b8451484525ebd391f45cfa0ff344950a32a15c764",
+              "check": "aws-s3-account-public-access-block",
+              "expected": "equals {\"BlockPublicAcls\": true, \"BlockPublicPolicy\": true, \"IgnorePublicAcls\": true, \"RestrictPublicBuckets\": true}"
+            }
+          ],
+          "gaps": []
+        }
+      ],
+      "citations": [
+        {
+          "file": "aws/s3control-public-access-block.json",
+          "field": "PublicAccessBlockConfiguration",
+          "value": {
+            "BlockPublicAcls": true,
+            "IgnorePublicAcls": true,
+            "BlockPublicPolicy": true,
+            "RestrictPublicBuckets": true
+          },
+          "sha256": "a01009f8abee2f4e461987b8451484525ebd391f45cfa0ff344950a32a15c764",
+          "check": "aws-s3-account-public-access-block",
+          "expected": "equals {\"BlockPublicAcls\": true, \"BlockPublicPolicy\": true, \"IgnorePublicAcls\": true, \"RestrictPublicBuckets\": true}"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "A.5.17",
+      "topic": "Passwords, keys and other secrets are handled and rotated with care",
+      "state": "contradicted",
+      "checks": [
+        {
+          "id": "github-secret-scanning",
+          "describes": "Secret scanning is switched on",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "github/repo.json",
+              "field": "security_and_analysis.secret_scanning.status",
+              "value": "enabled",
+              "sha256": "64bb76d1773b8acb5d71d05b3f309aca8eb15e65479d28f61ac665ee5c270be7",
+              "check": "github-secret-scanning",
+              "expected": "equals \"enabled\""
+            }
+          ],
+          "gaps": []
+        },
+        {
+          "id": "aws-password-policy-length",
+          "describes": "The IAM password policy requires at least 14 characters",
+          "state": "contradicted",
+          "citations": [
+            {
+              "file": "aws/password-policy.json",
+              "field": "PasswordPolicy.MinimumPasswordLength",
+              "value": 8,
+              "sha256": "116ee87e7052f714009cae8cc5615e19fe7285d1166a1f1fae259b7800e71f5f",
+              "check": "aws-password-policy-length",
+              "expected": "gte 14"
+            }
+          ],
+          "gaps": []
+        }
+      ],
+      "citations": [
+        {
+          "file": "github/repo.json",
+          "field": "security_and_analysis.secret_scanning.status",
+          "value": "enabled",
+          "sha256": "64bb76d1773b8acb5d71d05b3f309aca8eb15e65479d28f61ac665ee5c270be7",
+          "check": "github-secret-scanning",
+          "expected": "equals \"enabled\""
+        },
+        {
+          "file": "aws/password-policy.json",
+          "field": "PasswordPolicy.MinimumPasswordLength",
+          "value": 8,
+          "sha256": "116ee87e7052f714009cae8cc5615e19fe7285d1166a1f1fae259b7800e71f5f",
+          "check": "aws-password-policy-length",
+          "expected": "gte 14"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "A.5.18",
+      "topic": "Access is granted, reviewed and removed on purpose",
+      "state": "not assessable",
+      "checks": [],
+      "citations": [],
+      "gaps": [
+        "no check in the map reads an export for this control; it needs other evidence (documents, interviews, samples)"
+      ]
+    },
+    {
+      "id": "A.6.3",
+      "topic": "People receive security awareness training",
+      "state": "not assessable",
+      "checks": [],
+      "citations": [],
+      "gaps": [
+        "no check in the map reads an export for this control; it needs other evidence (documents, interviews, samples)"
+      ]
+    },
+    {
+      "id": "A.8.1",
+      "topic": "Company data on laptops and phones is protected through device management",
+      "state": "supported",
+      "checks": [
+        {
+          "id": "m365-device-compliance-policies",
+          "describes": "At least one Intune device compliance policy exists",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "m365/intune-compliance-policies.json",
+              "field": "value[]",
+              "value": "2 of 2 entries match (value[0], value[1])",
+              "sha256": "34c5e11f37534eee64bdf75f2e58c2fd498d04e4d04f2999cf37bb78bee8cf3e",
+              "check": "m365-device-compliance-policies",
+              "expected": "count_gte 1"
+            }
+          ],
+          "gaps": []
+        }
+      ],
+      "citations": [
+        {
+          "file": "m365/intune-compliance-policies.json",
+          "field": "value[]",
+          "value": "2 of 2 entries match (value[0], value[1])",
+          "sha256": "34c5e11f37534eee64bdf75f2e58c2fd498d04e4d04f2999cf37bb78bee8cf3e",
+          "check": "m365-device-compliance-policies",
+          "expected": "count_gte 1"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "A.8.2",
+      "topic": "Administrative access is kept to few people and watched",
+      "state": "supported",
+      "checks": [
+        {
+          "id": "github-admins-included",
+          "describes": "Branch protection also applies to administrators",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "github/branch-protection.json",
+              "field": "enforce_admins.enabled",
+              "value": true,
+              "sha256": "5cbae6b1369452e404e715ef61b189ceace1f31306e7f2a316a23a05399aa5a9",
+              "check": "github-admins-included",
+              "expected": "equals true"
+            }
+          ],
+          "gaps": []
+        },
+        {
+          "id": "aws-root-mfa",
+          "describes": "The root user has MFA",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "aws/account-summary.json",
+              "field": "SummaryMap.AccountMFAEnabled",
+              "value": 1,
+              "sha256": "58495fedbb5143b8bb4ece8e03215e60807fe959dbd4cf02d40a64c4ac2ba4a7",
+              "check": "aws-root-mfa",
+              "expected": "equals 1"
+            }
+          ],
+          "gaps": []
+        },
+        {
+          "id": "aws-root-no-access-keys",
+          "describes": "The root user has no access keys",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "aws/account-summary.json",
+              "field": "SummaryMap.AccountAccessKeysPresent",
+              "value": 0,
+              "sha256": "58495fedbb5143b8bb4ece8e03215e60807fe959dbd4cf02d40a64c4ac2ba4a7",
+              "check": "aws-root-no-access-keys",
+              "expected": "equals 0"
+            }
+          ],
+          "gaps": []
+        }
+      ],
+      "citations": [
+        {
+          "file": "github/branch-protection.json",
+          "field": "enforce_admins.enabled",
+          "value": true,
+          "sha256": "5cbae6b1369452e404e715ef61b189ceace1f31306e7f2a316a23a05399aa5a9",
+          "check": "github-admins-included",
+          "expected": "equals true"
+        },
+        {
+          "file": "aws/account-summary.json",
+          "field": "SummaryMap.AccountMFAEnabled",
+          "value": 1,
+          "sha256": "58495fedbb5143b8bb4ece8e03215e60807fe959dbd4cf02d40a64c4ac2ba4a7",
+          "check": "aws-root-mfa",
+          "expected": "equals 1"
+        },
+        {
+          "file": "aws/account-summary.json",
+          "field": "SummaryMap.AccountAccessKeysPresent",
+          "value": 0,
+          "sha256": "58495fedbb5143b8bb4ece8e03215e60807fe959dbd4cf02d40a64c4ac2ba4a7",
+          "check": "aws-root-no-access-keys",
+          "expected": "equals 0"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "A.8.5",
+      "topic": "Sign-in uses strong methods such as multi-factor authentication",
+      "state": "contradicted",
+      "checks": [
+        {
+          "id": "aws-root-mfa",
+          "describes": "The root user has MFA",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "aws/account-summary.json",
+              "field": "SummaryMap.AccountMFAEnabled",
+              "value": 1,
+              "sha256": "58495fedbb5143b8bb4ece8e03215e60807fe959dbd4cf02d40a64c4ac2ba4a7",
+              "check": "aws-root-mfa",
+              "expected": "equals 1"
+            }
+          ],
+          "gaps": []
+        },
+        {
+          "id": "aws-console-users-mfa",
+          "describes": "No IAM user with a console password lacks MFA",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "aws/credential-report.csv",
+              "field": "[]",
+              "value": "0 of 3 entries match",
+              "sha256": "315e7d770a737dd105a2656ef5e066275a1ef3b23bba48874b924fe35e7c4729",
+              "check": "aws-console-users-mfa",
+              "expected": "count_lte 0 where password_enabled equals \"true\", mfa_active equals \"false\""
+            }
+          ],
+          "gaps": []
+        },
+        {
+          "id": "m365-mfa-everyone",
+          "describes": "Security defaults are on, or an enabled Conditional Access policy requires MFA for all users",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "m365/conditional-access-policies.json",
+              "field": "value[]",
+              "value": "1 of 2 entries match (value[0])",
+              "sha256": "a3cc5d9fd24d6220eaa20012b242594e9a9c83933c7e2c10448073f9d9ddea5e",
+              "check": "m365-mfa-everyone",
+              "expected": "count_gte 1 where state equals \"enabled\", grantControls.builtInControls contains \"mfa\", conditions.users.includeUsers contains \"All\""
+            }
+          ],
+          "gaps": []
+        },
+        {
+          "id": "m365-legacy-auth-blocked",
+          "describes": "Security defaults are on, or an enabled Conditional Access policy blocks legacy authentication",
+          "state": "contradicted",
+          "citations": [
+            {
+              "file": "m365/security-defaults.json",
+              "field": "isEnabled",
+              "value": false,
+              "sha256": "84d7d0a191faeca078ab3441677344191a18970557e3b8d9ca9c1d1a4faa9615",
+              "check": "m365-legacy-auth-blocked",
+              "expected": "equals true"
+            },
+            {
+              "file": "m365/conditional-access-policies.json",
+              "field": "value[]",
+              "value": "0 of 2 entries match",
+              "sha256": "a3cc5d9fd24d6220eaa20012b242594e9a9c83933c7e2c10448073f9d9ddea5e",
+              "check": "m365-legacy-auth-blocked",
+              "expected": "count_gte 1 where state equals \"enabled\", grantControls.builtInControls contains \"block\", conditions.clientAppTypes contains \"other\""
+            }
+          ],
+          "gaps": []
+        }
+      ],
+      "citations": [
+        {
+          "file": "aws/account-summary.json",
+          "field": "SummaryMap.AccountMFAEnabled",
+          "value": 1,
+          "sha256": "58495fedbb5143b8bb4ece8e03215e60807fe959dbd4cf02d40a64c4ac2ba4a7",
+          "check": "aws-root-mfa",
+          "expected": "equals 1"
+        },
+        {
+          "file": "aws/credential-report.csv",
+          "field": "[]",
+          "value": "0 of 3 entries match",
+          "sha256": "315e7d770a737dd105a2656ef5e066275a1ef3b23bba48874b924fe35e7c4729",
+          "check": "aws-console-users-mfa",
+          "expected": "count_lte 0 where password_enabled equals \"true\", mfa_active equals \"false\""
+        },
+        {
+          "file": "m365/conditional-access-policies.json",
+          "field": "value[]",
+          "value": "1 of 2 entries match (value[0])",
+          "sha256": "a3cc5d9fd24d6220eaa20012b242594e9a9c83933c7e2c10448073f9d9ddea5e",
+          "check": "m365-mfa-everyone",
+          "expected": "count_gte 1 where state equals \"enabled\", grantControls.builtInControls contains \"mfa\", conditions.users.includeUsers contains \"All\""
+        },
+        {
+          "file": "m365/security-defaults.json",
+          "field": "isEnabled",
+          "value": false,
+          "sha256": "84d7d0a191faeca078ab3441677344191a18970557e3b8d9ca9c1d1a4faa9615",
+          "check": "m365-legacy-auth-blocked",
+          "expected": "equals true"
+        },
+        {
+          "file": "m365/conditional-access-policies.json",
+          "field": "value[]",
+          "value": "0 of 2 entries match",
+          "sha256": "a3cc5d9fd24d6220eaa20012b242594e9a9c83933c7e2c10448073f9d9ddea5e",
+          "check": "m365-legacy-auth-blocked",
+          "expected": "count_gte 1 where state equals \"enabled\", grantControls.builtInControls contains \"block\", conditions.clientAppTypes contains \"other\""
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "A.8.8",
+      "topic": "Known software weaknesses are found and fixed in time",
+      "state": "supported",
+      "checks": [
+        {
+          "id": "github-dependabot-alerts",
+          "describes": "Dependabot alerts are switched on (the API answers 204)",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "github/vulnerability-alerts.http",
+              "field": "status",
+              "value": 204,
+              "sha256": "2e7ea52d98a61748079ef883f605452b12b6991e1d2e3c637df6839dc7a78146",
+              "check": "github-dependabot-alerts",
+              "expected": "equals 204"
+            }
+          ],
+          "gaps": []
+        },
+        {
+          "id": "github-dependabot-security-updates",
+          "describes": "Dependabot security updates are switched on",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "github/repo.json",
+              "field": "security_and_analysis.dependabot_security_updates.status",
+              "value": "enabled",
+              "sha256": "64bb76d1773b8acb5d71d05b3f309aca8eb15e65479d28f61ac665ee5c270be7",
+              "check": "github-dependabot-security-updates",
+              "expected": "equals \"enabled\""
+            }
+          ],
+          "gaps": []
+        }
+      ],
+      "citations": [
+        {
+          "file": "github/vulnerability-alerts.http",
+          "field": "status",
+          "value": 204,
+          "sha256": "2e7ea52d98a61748079ef883f605452b12b6991e1d2e3c637df6839dc7a78146",
+          "check": "github-dependabot-alerts",
+          "expected": "equals 204"
+        },
+        {
+          "file": "github/repo.json",
+          "field": "security_and_analysis.dependabot_security_updates.status",
+          "value": "enabled",
+          "sha256": "64bb76d1773b8acb5d71d05b3f309aca8eb15e65479d28f61ac665ee5c270be7",
+          "check": "github-dependabot-security-updates",
+          "expected": "equals \"enabled\""
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "A.8.9",
+      "topic": "System settings are recorded and drift is noticed",
+      "state": "supported",
+      "checks": [
+        {
+          "id": "aws-config-recording",
+          "describes": "An AWS Config recorder is recording in every exported region",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "aws/regions/us-east-1/config-recorder-status.json",
+              "field": "ConfigurationRecordersStatus[]",
+              "value": "1 of 1 entries match (ConfigurationRecordersStatus[0])",
+              "sha256": "1da19d6b50486d2bf0add71155e7d8c42d33f0cf0ebd3420689a8d30989451f9",
+              "check": "aws-config-recording",
+              "expected": "count_gte 1 where recording equals true"
+            }
+          ],
+          "gaps": []
+        }
+      ],
+      "citations": [
+        {
+          "file": "aws/regions/us-east-1/config-recorder-status.json",
+          "field": "ConfigurationRecordersStatus[]",
+          "value": "1 of 1 entries match (ConfigurationRecordersStatus[0])",
+          "sha256": "1da19d6b50486d2bf0add71155e7d8c42d33f0cf0ebd3420689a8d30989451f9",
+          "check": "aws-config-recording",
+          "expected": "count_gte 1 where recording equals true"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "A.8.12",
+      "topic": "Leaks of sensitive data, including credentials, are prevented or caught",
+      "state": "contradicted",
+      "checks": [
+        {
+          "id": "github-secret-scanning",
+          "describes": "Secret scanning is switched on",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "github/repo.json",
+              "field": "security_and_analysis.secret_scanning.status",
+              "value": "enabled",
+              "sha256": "64bb76d1773b8acb5d71d05b3f309aca8eb15e65479d28f61ac665ee5c270be7",
+              "check": "github-secret-scanning",
+              "expected": "equals \"enabled\""
+            }
+          ],
+          "gaps": []
+        },
+        {
+          "id": "github-push-protection",
+          "describes": "Pushes containing detected secrets are blocked",
+          "state": "contradicted",
+          "citations": [
+            {
+              "file": "github/repo.json",
+              "field": "security_and_analysis.secret_scanning_push_protection.status",
+              "value": "disabled",
+              "sha256": "64bb76d1773b8acb5d71d05b3f309aca8eb15e65479d28f61ac665ee5c270be7",
+              "check": "github-push-protection",
+              "expected": "equals \"enabled\""
+            }
+          ],
+          "gaps": []
+        }
+      ],
+      "citations": [
+        {
+          "file": "github/repo.json",
+          "field": "security_and_analysis.secret_scanning.status",
+          "value": "enabled",
+          "sha256": "64bb76d1773b8acb5d71d05b3f309aca8eb15e65479d28f61ac665ee5c270be7",
+          "check": "github-secret-scanning",
+          "expected": "equals \"enabled\""
+        },
+        {
+          "file": "github/repo.json",
+          "field": "security_and_analysis.secret_scanning_push_protection.status",
+          "value": "disabled",
+          "sha256": "64bb76d1773b8acb5d71d05b3f309aca8eb15e65479d28f61ac665ee5c270be7",
+          "check": "github-push-protection",
+          "expected": "equals \"enabled\""
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "A.8.13",
+      "topic": "Copies of data and systems exist and restoring them is tried",
+      "state": "not assessable",
+      "checks": [
+        {
+          "id": "aws-backup-plans",
+          "describes": "AWS Backup has at least one backup plan (no plan is a gap: backups may be taken another way)",
+          "state": "not assessable",
+          "citations": [
+            {
+              "file": "aws/regions/us-east-1/backup-plans.json",
+              "field": "BackupPlansList[]",
+              "value": "0 of 0 entries match",
+              "sha256": "4155a9b0d35d21a261ce2b44317b5bb727036e684657ad4f9a440d920944c16c",
+              "check": "aws-backup-plans",
+              "expected": "count_gte 1"
+            }
+          ],
+          "gaps": [
+            "aws/regions/us-east-1/backup-plans.json: BackupPlansList[] does not meet count_gte 1, but the map says this absence does not contradict the control on its own; other evidence is needed"
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "file": "aws/regions/us-east-1/backup-plans.json",
+          "field": "BackupPlansList[]",
+          "value": "0 of 0 entries match",
+          "sha256": "4155a9b0d35d21a261ce2b44317b5bb727036e684657ad4f9a440d920944c16c",
+          "check": "aws-backup-plans",
+          "expected": "count_gte 1"
+        }
+      ],
+      "gaps": [
+        "aws-backup-plans: aws/regions/us-east-1/backup-plans.json: BackupPlansList[] does not meet count_gte 1, but the map says this absence does not contradict the control on its own; other evidence is needed"
+      ]
+    },
+    {
+      "id": "A.8.15",
+      "topic": "Systems keep a tamper-resistant record of who did what",
+      "state": "supported",
+      "checks": [
+        {
+          "id": "aws-cloudtrail-multi-region",
+          "describes": "At least one CloudTrail trail covers every region",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "aws/cloudtrail-trails.json",
+              "field": "trailList[]",
+              "value": "1 of 1 entries match (trailList[0])",
+              "sha256": "bf111d58e83a079092c3e63947270411adc8db31c6f5ca6b62a0fd9e3111392d",
+              "check": "aws-cloudtrail-multi-region",
+              "expected": "count_gte 1 where IsMultiRegionTrail equals true"
+            }
+          ],
+          "gaps": []
+        },
+        {
+          "id": "aws-cloudtrail-validation",
+          "describes": "A multi-region trail has log file integrity validation on",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "aws/cloudtrail-trails.json",
+              "field": "trailList[]",
+              "value": "1 of 1 entries match (trailList[0])",
+              "sha256": "bf111d58e83a079092c3e63947270411adc8db31c6f5ca6b62a0fd9e3111392d",
+              "check": "aws-cloudtrail-validation",
+              "expected": "count_gte 1 where IsMultiRegionTrail equals true, LogFileValidationEnabled equals true"
+            }
+          ],
+          "gaps": []
+        },
+        {
+          "id": "aws-cloudtrail-logging",
+          "describes": "Every exported trail status says logging is on",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "aws/cloudtrail-status-org-trail.json",
+              "field": "IsLogging",
+              "value": true,
+              "sha256": "b6ee96e68c72ea6451c11b7370f1730dc8ad5533ef09e00ebafaedd3b8c9c400",
+              "check": "aws-cloudtrail-logging",
+              "expected": "equals true"
+            }
+          ],
+          "gaps": []
+        }
+      ],
+      "citations": [
+        {
+          "file": "aws/cloudtrail-trails.json",
+          "field": "trailList[]",
+          "value": "1 of 1 entries match (trailList[0])",
+          "sha256": "bf111d58e83a079092c3e63947270411adc8db31c6f5ca6b62a0fd9e3111392d",
+          "check": "aws-cloudtrail-multi-region",
+          "expected": "count_gte 1 where IsMultiRegionTrail equals true"
+        },
+        {
+          "file": "aws/cloudtrail-trails.json",
+          "field": "trailList[]",
+          "value": "1 of 1 entries match (trailList[0])",
+          "sha256": "bf111d58e83a079092c3e63947270411adc8db31c6f5ca6b62a0fd9e3111392d",
+          "check": "aws-cloudtrail-validation",
+          "expected": "count_gte 1 where IsMultiRegionTrail equals true, LogFileValidationEnabled equals true"
+        },
+        {
+          "file": "aws/cloudtrail-status-org-trail.json",
+          "field": "IsLogging",
+          "value": true,
+          "sha256": "b6ee96e68c72ea6451c11b7370f1730dc8ad5533ef09e00ebafaedd3b8c9c400",
+          "check": "aws-cloudtrail-logging",
+          "expected": "equals true"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "A.8.16",
+      "topic": "Systems are watched for unusual or hostile activity",
+      "state": "not assessable",
+      "checks": [
+        {
+          "id": "aws-guardduty",
+          "describes": "A GuardDuty detector exists in every exported region",
+          "state": "not assessable",
+          "citations": [],
+          "gaps": [
+            "aws/*guardduty-detectors.json: not in the pack"
+          ]
+        }
+      ],
+      "citations": [],
+      "gaps": [
+        "aws-guardduty: aws/*guardduty-detectors.json: not in the pack"
+      ]
+    },
+    {
+      "id": "A.8.25",
+      "topic": "Security is part of how software is built",
+      "state": "supported",
+      "checks": [
+        {
+          "id": "github-status-checks",
+          "describes": "Named status checks must pass before merge",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "github/branch-protection.json",
+              "field": "required_status_checks.contexts",
+              "value": [
+                "ci / tests",
+                "ci / lint"
+              ],
+              "sha256": "5cbae6b1369452e404e715ef61b189ceace1f31306e7f2a316a23a05399aa5a9",
+              "check": "github-status-checks",
+              "expected": "not_empty true"
+            }
+          ],
+          "gaps": []
+        }
+      ],
+      "citations": [
+        {
+          "file": "github/branch-protection.json",
+          "field": "required_status_checks.contexts",
+          "value": [
+            "ci / tests",
+            "ci / lint"
+          ],
+          "sha256": "5cbae6b1369452e404e715ef61b189ceace1f31306e7f2a316a23a05399aa5a9",
+          "check": "github-status-checks",
+          "expected": "not_empty true"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "A.8.29",
+      "topic": "Automated tests run before changes are accepted",
+      "state": "supported",
+      "checks": [
+        {
+          "id": "github-status-checks",
+          "describes": "Named status checks must pass before merge",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "github/branch-protection.json",
+              "field": "required_status_checks.contexts",
+              "value": [
+                "ci / tests",
+                "ci / lint"
+              ],
+              "sha256": "5cbae6b1369452e404e715ef61b189ceace1f31306e7f2a316a23a05399aa5a9",
+              "check": "github-status-checks",
+              "expected": "not_empty true"
+            }
+          ],
+          "gaps": []
+        }
+      ],
+      "citations": [
+        {
+          "file": "github/branch-protection.json",
+          "field": "required_status_checks.contexts",
+          "value": [
+            "ci / tests",
+            "ci / lint"
+          ],
+          "sha256": "5cbae6b1369452e404e715ef61b189ceace1f31306e7f2a316a23a05399aa5a9",
+          "check": "github-status-checks",
+          "expected": "not_empty true"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "A.8.32",
+      "topic": "Changes go through a reviewed, recorded process",
+      "state": "supported",
+      "checks": [
+        {
+          "id": "github-branch-protected",
+          "describes": "The default branch has branch protection",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "github/branch-protection.json",
+              "field": "url",
+              "value": "https://api.github.com/repos/example-org/payments-api/branches/main/protection",
+              "sha256": "5cbae6b1369452e404e715ef61b189ceace1f31306e7f2a316a23a05399aa5a9",
+              "check": "github-branch-protected",
+              "expected": "exists true"
+            }
+          ],
+          "gaps": []
+        },
+        {
+          "id": "github-required-reviews",
+          "describes": "Merges to the protected branch need at least one approving review",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "github/branch-protection.json",
+              "field": "required_pull_request_reviews.required_approving_review_count",
+              "value": 1,
+              "sha256": "5cbae6b1369452e404e715ef61b189ceace1f31306e7f2a316a23a05399aa5a9",
+              "check": "github-required-reviews",
+              "expected": "gte 1"
+            }
+          ],
+          "gaps": []
+        },
+        {
+          "id": "github-admins-included",
+          "describes": "Branch protection also applies to administrators",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "github/branch-protection.json",
+              "field": "enforce_admins.enabled",
+              "value": true,
+              "sha256": "5cbae6b1369452e404e715ef61b189ceace1f31306e7f2a316a23a05399aa5a9",
+              "check": "github-admins-included",
+              "expected": "equals true"
+            }
+          ],
+          "gaps": []
+        },
+        {
+          "id": "github-force-push-blocked",
+          "describes": "History on the protected branch cannot be rewritten by force push",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "github/branch-protection.json",
+              "field": "allow_force_pushes.enabled",
+              "value": false,
+              "sha256": "5cbae6b1369452e404e715ef61b189ceace1f31306e7f2a316a23a05399aa5a9",
+              "check": "github-force-push-blocked",
+              "expected": "equals false"
+            }
+          ],
+          "gaps": []
+        },
+        {
+          "id": "github-merged-prs-approved",
+          "describes": "Every exported merged pull request ended with an approved review decision",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "github/pulls-merged.json",
+              "field": "[]",
+              "value": "0 of 4 entries match",
+              "sha256": "99a1fdcd43f527006f0c38520e3eb132180b4540791240436bd291787f3e5bf3",
+              "check": "github-merged-prs-approved",
+              "expected": "count_lte 0 where reviewDecision not_equals \"APPROVED\""
+            }
+          ],
+          "gaps": []
+        },
+        {
+          "id": "github-codeowners",
+          "describes": "A CODEOWNERS file names who reviews which code",
+          "state": "supported",
+          "citations": [
+            {
+              "file": "github/codeowners.json",
+              "field": "path",
+              "value": ".github/CODEOWNERS",
+              "sha256": "0246287857e674884da408d22663050f0d4ccee18ddd0f2a81f9d0bc48b37c2e",
+              "check": "github-codeowners",
+              "expected": "exists true"
+            }
+          ],
+          "gaps": []
+        }
+      ],
+      "citations": [
+        {
+          "file": "github/branch-protection.json",
+          "field": "url",
+          "value": "https://api.github.com/repos/example-org/payments-api/branches/main/protection",
+          "sha256": "5cbae6b1369452e404e715ef61b189ceace1f31306e7f2a316a23a05399aa5a9",
+          "check": "github-branch-protected",
+          "expected": "exists true"
+        },
+        {
+          "file": "github/branch-protection.json",
+          "field": "required_pull_request_reviews.required_approving_review_count",
+          "value": 1,
+          "sha256": "5cbae6b1369452e404e715ef61b189ceace1f31306e7f2a316a23a05399aa5a9",
+          "check": "github-required-reviews",
+          "expected": "gte 1"
+        },
+        {
+          "file": "github/branch-protection.json",
+          "field": "enforce_admins.enabled",
+          "value": true,
+          "sha256": "5cbae6b1369452e404e715ef61b189ceace1f31306e7f2a316a23a05399aa5a9",
+          "check": "github-admins-included",
+          "expected": "equals true"
+        },
+        {
+          "file": "github/branch-protection.json",
+          "field": "allow_force_pushes.enabled",
+          "value": false,
+          "sha256": "5cbae6b1369452e404e715ef61b189ceace1f31306e7f2a316a23a05399aa5a9",
+          "check": "github-force-push-blocked",
+          "expected": "equals false"
+        },
+        {
+          "file": "github/pulls-merged.json",
+          "field": "[]",
+          "value": "0 of 4 entries match",
+          "sha256": "99a1fdcd43f527006f0c38520e3eb132180b4540791240436bd291787f3e5bf3",
+          "check": "github-merged-prs-approved",
+          "expected": "count_lte 0 where reviewDecision not_equals \"APPROVED\""
+        },
+        {
+          "file": "github/codeowners.json",
+          "field": "path",
+          "value": ".github/CODEOWNERS",
+          "sha256": "0246287857e674884da408d22663050f0d4ccee18ddd0f2a81f9d0bc48b37c2e",
+          "check": "github-codeowners",
+          "expected": "exists true"
+        }
+      ],
+      "gaps": []
+    }
+  ],
+  "unmapped_files": [
+    "github/dependabot-alerts.json"
+  ],
+  "disclaimer": "Preparation for a human assessor: this is not an audit opinion, an attestation or a certification, and not legal advice. Every result comes from exported files and needs review by the assessor."
+}

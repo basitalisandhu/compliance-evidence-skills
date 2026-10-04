@@ -1,0 +1,61 @@
+{
+  "value": [
+    {
+      "id": "00000000-0000-0000-0000-0000000000c1",
+      "displayName": "Require MFA for all users",
+      "state": "enabled",
+      "conditions": {
+        "users": {
+          "includeUsers": [
+            "All"
+          ],
+          "excludeUsers": [],
+          "excludeGroups": [
+            "00000000-0000-0000-0000-0000000000e1"
+          ]
+        },
+        "applications": {
+          "includeApplications": [
+            "All"
+          ]
+        },
+        "clientAppTypes": [
+          "all"
+        ]
+      },
+      "grantControls": {
+        "operator": "OR",
+        "builtInControls": [
+          "mfa"
+        ]
+      }
+    },
+    {
+      "id": "00000000-0000-0000-0000-0000000000c2",
+      "displayName": "Block legacy authentication",
+      "state": "enabledForReportingButNotEnforced",
+      "conditions": {
+        "users": {
+          "includeUsers": [
+            "All"
+          ]
+        },
+        "applications": {
+          "includeApplications": [
+            "All"
+          ]
+        },
+        "clientAppTypes": [
+          "exchangeActiveSync",
+          "other"
+        ]
+      },
+      "grantControls": {
+        "operator": "OR",
+        "builtInControls": [
+          "block"
+        ]
+      }
+    }
+  ]
+}

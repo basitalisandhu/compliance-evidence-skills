@@ -1,0 +1,1 @@
+An error occurred (AccessDeniedException) when calling the ListDetectors operation: User: arn:aws:sts::123456789012:assumed-role/audit-reader/jane.doe is not authorized to perform: guardduty:ListDetectors
