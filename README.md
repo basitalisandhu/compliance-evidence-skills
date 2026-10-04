@@ -51,6 +51,8 @@ claude plugin marketplace add basitalisandhu/compliance-evidence-skills
 claude plugin install compliance-evidence@compliance-evidence-skills --scope user
 ```
 
+This pack is also part of [claude-skills](https://github.com/basitalisandhu/claude-skills), which holds every skill I maintain as one marketplace: `/plugin marketplace add basitalisandhu/claude-skills`.
+
 The scripts are also published as one container image on GitHub Packages (linux/amd64 and linux/arm64) when a version is tagged. The entrypoint is `compliance-evidence <subcommand> [args]`; mount the files at `/work`, the working directory:
 
 ```bash
@@ -170,6 +172,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the ground rules and [docs/good-first
 | [aws-security-skills](https://github.com/basitalisandhu/aws-security-skills) | Claude Code skills for AWS security: account audit, SCP guardrails, landing zone blast radius, IAM least privilege, Security Hub triage |
 | [repo-engineering-skills](https://github.com/basitalisandhu/repo-engineering-skills) | Claude Code skills for repository audits and documentation checked against the code |
 | [basitalisandhu](https://github.com/basitalisandhu) | The maintainer's profile and other projects |
+| [One marketplace for all 13 plugins](https://github.com/basitalisandhu/claude-skills) | All packs in one repository; this plugin's pages are at https://basitalisandhu.github.io/claude-skills/plugins/compliance-evidence/ |
 
 ## Licence
 
