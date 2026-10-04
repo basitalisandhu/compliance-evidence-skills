@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="412" viewBox="0 0 920 412" role="img" aria-label="compliance-evidence pack verify on the committed tampered pack">
+<title>compliance-evidence pack verify on the committed tampered pack</title>
+<rect width="920" height="412" rx="8" fill="#0A1628"/>
+<path d="M0 8a8 8 0 0 1 8-8h904a8 8 0 0 1 8 8v28h-920z" fill="#13233D"/>
+<circle cx="20" cy="18" r="6" fill="#FF7B72"/><circle cx="40" cy="18" r="6" fill="#E3B341"/><circle cx="60" cy="18" r="6" fill="#7EE787"/>
+<text x="460" y="23" fill="#7D8BA1" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" text-anchor="middle" xml:space="preserve">compliance-evidence pack verify on the committed tampered pack</text>
+<g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="14" fill="#D7DEE8" xml:space="preserve" style="white-space:pre">
+<text x="24" y="68" xml:space="preserve"><tspan fill="#7FD1AE">$ compliance-evidence pack verify tests/fixtures/evidence-pack/tampered-pack</tspan></text>
+<text x="24" y="88" xml:space="preserve"># Evidence pack verification</text>
+<text x="24" y="128" xml:space="preserve">&gt; Preparation for a human assessor: this is not an audit opinion, an attestation or a</text>
+<text x="24" y="148" xml:space="preserve">certification, and not legal advice. Every result comes from exported files and needs review by the</text>
+<text x="24" y="168" xml:space="preserve">assessor.</text>
+<text x="24" y="208" xml:space="preserve">Pack: tests/fixtures/evidence-pack/tampered-pack. Files checked: 17.</text>
+<text x="24" y="228" xml:space="preserve">manifest.json hash: not checked (pass --manifest-sha256 with the value recorded at build time).</text>
+<text x="24" y="268" xml:space="preserve">| Path | Status | Expected SHA-256 | Actual SHA-256 |</text>
+<text x="24" y="288" xml:space="preserve">|---|---|---|---|</text>
+<text x="24" y="308" xml:space="preserve">| aws/password-policy.json | <tspan fill="#FF7B72">MODIFIED</tspan> | 116ee87e7052f714009cae8cc5615e19fe7285d1166a1f1fae259b7800e7</text>
+<text x="24" y="328" xml:space="preserve">1f5f | 903c7a7581f7fcd160dd152c48fa97efa260ca7eb604fb916e6f47d3b079e883 |</text>
+<text x="24" y="368" xml:space="preserve">Result: <tspan fill="#FF7B72">FAILED</tspan>. Treat the files above as unreliable until re-exported and re-packed.</text>
+<text x="24" y="388" xml:space="preserve"><tspan fill="#7D8BA1">[exit 1]</tspan></text>
+</g>
+</svg>

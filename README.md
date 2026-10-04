@@ -13,6 +13,12 @@ No network access from the scripts, no telemetry. All inputs are exports already
 /plugin install compliance-evidence@compliance-evidence-skills
 ```
 
+## Demo
+
+![Terminal output of compliance-evidence pack verify catching a changed file in the committed tampered test pack](docs/demo.svg)
+
+Generated from the committed fixtures by [`scripts/render_demo.py`](scripts/render_demo.py); run `python3 scripts/render_demo.py` to regenerate it.
+
 ## Quickstart
 
 In a Claude Code session, after installing:
