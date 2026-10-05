@@ -75,6 +75,11 @@ licensed copy can add distinctive phrases locally so that pasted text is caught.
 
 ## Interpreting the output
 
+`WRONG-CONTROL-CITATION` means a file and field exist in the control map but are
+not cited for the current `## <identifier>` heading. Move the citation to the
+control it supports or use evidence mapped to the current control; do not treat
+the presence of evidence elsewhere in the map as support for this claim.
+
 - Draft: one `## <identifier>` section per control with the paraphrased topic, one sentence per citation, a closing
   sentence that matches the control state, and "Open items for the assessor" for gaps.
 - Lint rules: `UNCITED-CLAIM`, `UNKNOWN-CITATION`, `STATE-MISMATCH`, `UNKNOWN-CONTROL`, `CERTAINTY`, `COPIED-TEXT`,
