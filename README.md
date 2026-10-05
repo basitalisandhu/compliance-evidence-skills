@@ -1,12 +1,12 @@
 # Claude Code skills for compliance evidence
 
-**Compliance evidence skills for Claude Code: build integrity-checked evidence packs from GitHub, AWS and Microsoft 365 exports, map them to ISO 27001 and SOC 2 control identifiers, and draft auditor narratives that cite evidence or say not assessable.**
+**Compliance evidence skills for Claude Code: build integrity-checked evidence packs from GitHub, AWS and Microsoft 365 exports, map them to ISO 27001 and SOC 2 control identifiers and the Essential Eight maturity levels, and draft auditor narratives and security questionnaire answers that cite evidence or say not assessable.**
 
-compliance-evidence-skills is a Claude Code plugin marketplace with one plugin, `compliance-evidence`, holding five skills. Each skill is a fixed procedure plus a tested Python script (standard library only). The skills tell Claude which read-only exports to take and which permission each needs; the scripts then work on the saved files: hash them into a pack with a manifest, map them to control identifiers, and draft narratives in which every evidence statement cites a file and field.
+compliance-evidence-skills is a Claude Code plugin marketplace with one plugin, `compliance-evidence`, holding seven skills. Each skill is a fixed procedure plus a tested Python script (standard library only). The skills tell Claude which read-only exports to take and which permission each needs; the scripts then work on the saved files: hash them into a pack with a manifest, map them to control identifiers, and draft narratives in which every evidence statement cites a file and field.
 
 It is written for the people who prepare an ISO 27001 or SOC 2 assessment in a small or mid-sized organisation: engineers and IT administrators who own GitHub, AWS and Microsoft 365, and the security or compliance lead who has to hand evidence to an assessor. It exists because evidence is still mostly screenshots and loose exports with no record of who took them, when, or with which command, and because tools that turn an API error into a control failure (or a missing file into a pass) cost hours of argument during fieldwork. These skills keep three result states only, `supported`, `contradicted` and `not assessable`, and never mark a control supported without a cited evidence file and field.
 
-Common searches it answers: SOC 2 Type II evidence from GitHub and AWS, an ISO 27001 or SOC 2 readiness assessment, and packing a Vanta or Drata export with a hash manifest for the assessor.
+Common searches it answers: SOC 2 Type II evidence from GitHub and AWS, an ISO 27001 or SOC 2 readiness assessment, packing a Vanta or Drata export with a hash manifest for the assessor, answering a customer security questionnaire from evidence ("fill in this security questionnaire" without inventing answers), and an Essential Eight maturity self-assessment from evidence ("what Essential Eight maturity level can we claim?").
 
 No network access from the scripts, no telemetry. All inputs are exports already on disk.
 
@@ -58,10 +58,10 @@ This pack is also part of [claude-skills](https://github.com/basitalisandhu/clau
 The scripts are also published as one container image on GitHub Packages (linux/amd64 and linux/arm64) when a version is tagged. The entrypoint is `compliance-evidence <subcommand> [args]`; mount the files at `/work`, the working directory:
 
 ```bash
-docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.1.2 pack build evidence-2026-q3 --out pack-2026-q3
-docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.1.2 map pack-2026-q3 --framework soc2 \
+docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.2.0 pack build evidence-2026-q3 --out pack-2026-q3
+docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.2.0 map pack-2026-q3 --framework soc2 \
   --map /app/plugins/compliance-evidence/skills/control-map-from-exports/references/starter-map.yaml
-docker run --rm ghcr.io/basitalisandhu/compliance-evidence-skills:0.1.2 --help
+docker run --rm ghcr.io/basitalisandhu/compliance-evidence-skills:0.2.0 --help
 ```
 
 | Subcommand | Script (skill) |
@@ -72,14 +72,16 @@ docker run --rm ghcr.io/basitalisandhu/compliance-evidence-skills:0.1.2 --help
 | `aws` | `aws_evidence.py` (aws-identity-and-logging-evidence) |
 | `narrative` | `narrative.py` (auditor-narrative-drafter) |
 | `narrative-lint` | `narrative_lint.py` (auditor-narrative-drafter) |
+| `questionnaire` | `questionnaire.py` (security-questionnaire-drafter) |
+| `e8` | `e8_map.py` (essential-eight-evidence-map) |
 
 Every subcommand passes its arguments to the script unchanged. The image has no pip dependencies and runs as uid 1000; on Linux add `--user "$(id -u):$(id -g)"` if the mounted folder is not writable by that uid. From a checkout, `python3 scripts/cli.py` is the same dispatcher. Released images are signed with cosign (keyless) and carry a build provenance attestation and an SPDX SBOM:
 
 ```bash
-cosign verify ghcr.io/basitalisandhu/compliance-evidence-skills:0.1.2 \
+cosign verify ghcr.io/basitalisandhu/compliance-evidence-skills:0.2.0 \
   --certificate-identity-regexp '^https://github.com/basitalisandhu/compliance-evidence-skills/' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com
-gh attestation verify oci://ghcr.io/basitalisandhu/compliance-evidence-skills:0.1.2 --owner basitalisandhu
+gh attestation verify oci://ghcr.io/basitalisandhu/compliance-evidence-skills:0.2.0 --owner basitalisandhu
 ```
 
 ## When to use this
@@ -89,6 +91,8 @@ gh attestation verify oci://ghcr.io/basitalisandhu/compliance-evidence-skills:0.
 - Change management and vulnerability management evidence from a GitHub repository, including whether every merged pull request had an independent approval: `github-change-control-evidence`
 - CloudTrail, GuardDuty, Config, root and user MFA, key age, password policy, S3 public access block and backup plans from an AWS account: `aws-identity-and-logging-evidence`
 - Control narratives or PBC answers that must not claim more than the evidence shows: `auditor-narrative-drafter`
+- A customer or vendor security questionnaire to answer from your own policies and evidence, with every unknown left open for an owner: `security-questionnaire-drafter`
+- Which Essential Eight requirements your evidence covers at ML1 to ML3, and the level each strategy can claim today: `essential-eight-evidence-map`
 
 ## Skills
 
@@ -99,6 +103,8 @@ gh attestation verify oci://ghcr.io/basitalisandhu/compliance-evidence-skills:0.
 | `github-change-control-evidence` | change management, branch protection, pull request review population, Dependabot and secret scanning | `github_evidence.py`: 14 evidence rows; 403 and plan limits are not assessable, "switched off" 404s are contradicted |
 | `aws-identity-and-logging-evidence` | logging, identity and backup evidence from AWS | `aws_evidence.py`: 12 evidence rows; saved stderr separates AccessDenied from not configured |
 | `auditor-narrative-drafter` | "draft the narrative for A.8.15", "check this narrative before it goes out" | `narrative.py` with `[evidence: file#field]` on every evidence sentence; `narrative_lint.py` rejects uncited claims, untraceable citations, state mismatches, certainty wording and listed copied phrases |
+| `security-questionnaire-drafter` | "fill in this security questionnaire", customer due diligence, CAIQ or SIG-style sheets saved as CSV or Markdown | `questionnaire.py`: one draft per question citing policy sections and hashed evidence files, `not assessable` when nothing matches, control map states carried through, CSV with an owner column |
+| `essential-eight-evidence-map` | "what Essential Eight maturity level can we claim?", preparing for an Essential Eight assessment | `e8_map.py`: the 153 requirements of the November 2023 maturity model per strategy and level with a state each, the claimable level per strategy, unusable evidence and mapping candidates |
 
 ## Result states
 
@@ -117,6 +123,8 @@ Covered:
 - GitHub: one repository and branch per run (branch protection or rulesets, reviews, status checks, admin enforcement, force pushes, merged pull request approvals, CODEOWNERS, signed commits, Dependabot and secret scanning settings and alert age).
 - AWS: one account per run (CloudTrail, IAM root and users, password policy, GuardDuty, Config, account S3 public access block, AWS Backup plans).
 - Microsoft 365 through the starter map: security defaults, Conditional Access MFA and legacy authentication policies, Intune compliance policies.
+- Security questionnaires as CSV or Markdown, answered by keyword match against policy sections and hashed pack files, or by control state when a question names a control identifier. XLSX, PDF and Word questionnaires need converting first, and matches need a human read.
+- The ASD Essential Eight Maturity Model (November 2023): all 153 requirement statements per strategy and level (CC BY 4.0), with the level each strategy can claim from the evidence you map. The script checks that mapped files are present, unchanged and recent; it does not read their content.
 
 Not covered:
 

@@ -65,7 +65,7 @@ jobs:
           docker build --build-arg VERSION=ci -t compliance-evidence-skills:ci .
           docker run --rm compliance-evidence-skills:ci --help > help.txt && grep "^usage: compliance-evidence <subcommand>" help.txt
           docker run --rm compliance-evidence-skills:ci > /dev/null && grep -c "^  [a-z]" help.txt
-          for s in pack map github aws narrative narrative-lint; do docker run --rm compliance-evidence-skills:ci "$s" --help > /dev/null; done
+          for s in pack map github aws narrative narrative-lint questionnaire e8; do docker run --rm compliance-evidence-skills:ci "$s" --help > /dev/null; done
           docker run --rm compliance-evidence-skills:ci --version
           docker run --rm -v "$PWD/tests/fixtures:/work:ro" compliance-evidence-skills:ci github github/protected --as-of 2026-10-05 > /dev/null
           rc=0; docker run --rm -v "$PWD/tests/fixtures:/work:ro" compliance-evidence-skills:ci pack verify evidence-pack/tampered-pack > /dev/null || rc=$?; test "$rc" = 1

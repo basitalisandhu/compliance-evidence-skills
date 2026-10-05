@@ -4,6 +4,18 @@ All notable changes to this project are documented here. The format follows Keep
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-05
+
+### Added
+
+- `security-questionnaire-drafter`: `questionnaire.py` drafts answers to a security questionnaire (CSV, or Markdown as a table, a numbered list or question lines) from an evidence pack (hashes checked; a file that fails is never cited), a policy folder split at headings, and optionally a control map. Each question is `supported` with quoted, cited policy sections and evidence files, `contradicted` when it names a control the map marks contradicted, or `not assessable` with a request to route it to an owner. Never writes "Yes" or "No". Markdown, JSON, `--csv` with an owner column, `--out`, `--redact`. 11 tests with synthetic inputs.
+- `essential-eight-evidence-map`: `e8_map.py` maps an evidence pack to the ASD Essential Eight Maturity Model (November 2023) through a mapping file (CSV or JSON, globs allowed), checks each mapped file against the manifest (present, SHA-256, optional age limit), gives each of the 153 requirements a state and each strategy the maturity level it can claim, and lists unmapped files as candidates per strategy. The bundled requirement list reproduces the model's statements under CC BY 4.0 with repository ids such as `PA-ML1-01`. Markdown, JSON, `--csv`, `--out`, `--redact`. 12 tests with synthetic packs.
+- Dispatcher subcommands `questionnaire` and `e8`; the container check in CI runs their `--help`.
+
+### Changed
+
+- Version 0.2.0 in `pyproject.toml`, `plugin.json`, `marketplace.json`, the dispatcher, the pack builder's tool string and the README container examples; the READMEs list the new skills and the searches they answer; helper-copy wording no longer says "all five".
+
 ## [0.1.2] - 2026-10-05
 
 ### Changed

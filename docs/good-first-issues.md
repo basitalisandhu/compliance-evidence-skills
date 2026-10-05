@@ -1,6 +1,6 @@
 # Good first issues
 
-Small, well-specified pieces of work for a first contribution. Each is self-contained, has a test to add, and needs no GitHub organisation, AWS account, Microsoft 365 tenant, credentials or network access. Read [CONTRIBUTING.md](../CONTRIBUTING.md) first: three result states only, no framework text, standard library only, tests with every change, fixtures use `example.com`, account `123456789012` and zero GUIDs, plain language without em-dashes. If you change `_evidence.py`, copy it to all five skills.
+Small, well-specified pieces of work for a first contribution. Each is self-contained, has a test to add, and needs no GitHub organisation, AWS account, Microsoft 365 tenant, credentials or network access. Read [CONTRIBUTING.md](../CONTRIBUTING.md) first: three result states only, no framework text, standard library only, tests with every change, fixtures use `example.com`, account `123456789012` and zero GUIDs, plain language without em-dashes. If you change `_evidence.py`, copy it to every skill that carries it.
 
 To claim one, open an issue with the title below (or comment on the existing one) and say you are working on it. Run `python3 -m pytest -q`, `python3 -m ruff check .` and `python3 scripts/validate_plugins.py` before opening the pull request.
 
