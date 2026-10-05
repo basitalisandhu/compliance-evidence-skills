@@ -1,0 +1,2 @@
+# Keep test fixtures byte-exact on every platform: the evidence pack fixtures carry SHA-256 hashes of these files.
+tests/fixtures/** -text

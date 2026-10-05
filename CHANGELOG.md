@@ -10,7 +10,7 @@ All notable changes to this project are documented here. The format follows Keep
 
 - Rewrote all five skill descriptions to 484 to 536 characters (from 765 to 840): each starts with a verb, states the goal before the mechanism, carries one quoted phrase a user would type, a "Use when ..." sentence and a "Not for ..." boundary, and stays double-quoted.
 - `aws-identity-and-logging-evidence` states its boundary with `aws-account-audit` in aws-security-skills: the audit ranks risk, this skill turns the same saved CLI output into evidence rows.
-- Tests open text files with `encoding="utf-8"` (the scripts already did), and CI runs tests, ruff and the `--help` check on `windows-latest` as well as Ubuntu and macOS.
+- Tests open text files with `encoding="utf-8"` (the scripts already did), and CI runs tests, ruff and the `--help` check on `windows-latest` as well as Ubuntu and macOS. A `.gitattributes` keeps `tests/fixtures/` byte-exact so the committed SHA-256 manifests verify on a Windows checkout.
 - The plugin and root READMEs mention SOC 2 Type II evidence, readiness assessments and Vanta or Drata exports, with what the skills do and do not read.
 - `scripts/validate_plugins.py` now fails when a description is over 600 characters, is not double-quoted, or lacks "Use " or "Not for", and when a SKILL.md has no `## Limits` section; `tests/test_skill_frontmatter.py` covers each rule.
 - Version 0.1.2 in `pyproject.toml`, `plugin.json`, `marketplace.json`, the dispatcher, the evidence pack tool string and the README container examples.
