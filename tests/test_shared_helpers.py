@@ -18,7 +18,7 @@ ev = load_script("evidence-pack-builder", "_evidence.py")
 @pytest.mark.parametrize("helper", ["_evidence.py", "_miniyaml.py"])
 def test_helper_copies_are_identical(helper):
     copies = {skill: (SKILLS / skill / "scripts" / helper).read_text(encoding="utf-8") for skill in SCRIPTS}
-    assert len(set(copies.values())) == 1, f"{helper} differs between skills: copy one version to all five"
+    assert len(set(copies.values())) == 1, f"{helper} differs between skills: copy one version to every skill that carries it"
 
 
 @pytest.mark.parametrize("skill", sorted(SCRIPTS))
