@@ -50,7 +50,7 @@ def test_self_approval_does_not_count(tmp_path):
     shutil.copytree(GH / "protected", tmp_path / "gh")
     prs = [{"number": 1, "author": {"login": "dev-alice"}, "mergedAt": "2026-08-01T10:00:00Z",
             "reviews": [{"author": {"login": "dev-alice"}, "state": "APPROVED"}]}]
-    (tmp_path / "gh" / "pulls-merged.json").write_text(json.dumps(prs))
+    (tmp_path / "gh" / "pulls-merged.json").write_text(json.dumps(prs), encoding="utf-8")
     _, _, r = rows(tmp_path / "gh")
     assert r["GH-PR-APPROVED"]["state"] == "contradicted"
 
@@ -79,7 +79,7 @@ def test_branch_not_protected_without_rules_export_is_not_assessable(tmp_path):
     (tmp_path / "gh" / "rules.json").unlink()
     _, _, r = rows(tmp_path / "gh")
     assert r["GH-BRANCH-PROTECTION"]["state"] == "not assessable"
-    (tmp_path / "gh" / "rules.json").write_text("[]")
+    (tmp_path / "gh" / "rules.json").write_text("[]", encoding="utf-8")
     _, _, r = rows(tmp_path / "gh")
     assert r["GH-BRANCH-PROTECTION"]["state"] == "contradicted"
     assert r["GH-REQUIRED-REVIEWS"]["state"] == "contradicted"
@@ -87,8 +87,8 @@ def test_branch_not_protected_without_rules_export_is_not_assessable(tmp_path):
 
 def test_slurped_alert_pages_are_flattened(tmp_path):
     shutil.copytree(GH / "weak", tmp_path / "gh")
-    alerts = json.loads((GH / "weak" / "dependabot-alerts.json").read_text())
-    (tmp_path / "gh" / "dependabot-alerts.json").write_text(json.dumps([alerts[:1], alerts[1:]]))
+    alerts = json.loads((GH / "weak" / "dependabot-alerts.json").read_text(encoding="utf-8"))
+    (tmp_path / "gh" / "dependabot-alerts.json").write_text(json.dumps([alerts[:1], alerts[1:]]), encoding="utf-8")
     _, _, r = rows(tmp_path / "gh")
     assert "1 overdue of 2 open" in r["GH-OPEN-VULN-ALERTS"]["citations"][0]["value"]
 
@@ -96,7 +96,7 @@ def test_slurped_alert_pages_are_flattened(tmp_path):
 def test_limit_sized_export_gets_a_gap(tmp_path):
     shutil.copytree(GH / "protected", tmp_path / "gh")
     pr = {"number": 1, "author": {"login": "a"}, "mergedAt": "2026-08-01T10:00:00Z", "reviews": [{"author": {"login": "b"}, "state": "APPROVED"}]}
-    (tmp_path / "gh" / "pulls-merged.json").write_text(json.dumps([dict(pr, number=i) for i in range(30)]))
+    (tmp_path / "gh" / "pulls-merged.json").write_text(json.dumps([dict(pr, number=i) for i in range(30)]), encoding="utf-8")
     _, _, r = rows(tmp_path / "gh")
     assert r["GH-PR-APPROVED"]["state"] == "supported" and "exactly 30 entries" in r["GH-PR-APPROVED"]["gaps"][0]
 
@@ -132,7 +132,7 @@ def test_bad_input_exits_2(tmp_path):
     rc, _, err = run_main(mod, [str(tmp_path / "nope")])
     assert rc == 2 and "not a folder" in err
     shutil.copytree(GH / "protected", tmp_path / "gh")
-    (tmp_path / "gh" / "pulls-merged.json").write_text("{not json")
+    (tmp_path / "gh" / "pulls-merged.json").write_text("{not json", encoding="utf-8")
     rc, _, err = run_main(mod, [str(tmp_path / "gh")])
     assert rc == 2 and "invalid JSON" in err
 

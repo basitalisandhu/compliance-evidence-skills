@@ -17,14 +17,14 @@ ev = load_script("evidence-pack-builder", "_evidence.py")
 
 @pytest.mark.parametrize("helper", ["_evidence.py", "_miniyaml.py"])
 def test_helper_copies_are_identical(helper):
-    copies = {skill: (SKILLS / skill / "scripts" / helper).read_text() for skill in SCRIPTS}
+    copies = {skill: (SKILLS / skill / "scripts" / helper).read_text(encoding="utf-8") for skill in SCRIPTS}
     assert len(set(copies.values())) == 1, f"{helper} differs between skills: copy one version to all five"
 
 
 @pytest.mark.parametrize("skill", sorted(SCRIPTS))
 def test_scripts_have_no_network_or_subprocess_code(skill):
     for path in (SKILLS / skill / "scripts").glob("*.py"):
-        text = path.read_text()
+        text = path.read_text(encoding="utf-8")
         assert not re.search(r"^\s*(import|from)\s+(socket|subprocess|urllib|http|requests|ssl|ftplib|smtplib)\b", text, re.M), path
         assert "os.environ" not in text and "getenv" not in text, f"{path} reads the environment"
 
@@ -119,7 +119,7 @@ def test_starter_map_controls_appear_in_the_identifier_files():
     mapping = cm.load_map(str(STARTER_MAP))
     refs = SKILLS / "control-map-from-exports" / "references"
     for fw, fname in (("iso27001", "iso27001-identifiers.md"), ("soc2", "soc2-identifiers.md")):
-        table = (refs / fname).read_text()
+        table = (refs / fname).read_text(encoding="utf-8")
         for cid, topic in mapping["controls"][fw].items():
             assert f"| {cid} | {topic} |" in table, f"{cid} paraphrase differs between the starter map and {fname}"
 
