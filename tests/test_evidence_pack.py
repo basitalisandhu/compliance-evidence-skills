@@ -11,14 +11,14 @@ TAMPERED = FIXTURES / "evidence-pack" / "tampered-pack"
 
 
 def manifest(pack):
-    return json.loads((pack / "manifest.json").read_text())
+    return json.loads((pack / "manifest.json").read_text(encoding="utf-8"))
 
 
 def test_build_writes_manifest_and_markdown(pack):
     m = manifest(pack)
     assert m["schema"] == "compliance-evidence-pack/1"
     assert m["file_count"] == 17 and len(m["files"]) == 17
-    assert (pack / "MANIFEST.md").read_text().startswith("# Evidence pack manifest")
+    assert (pack / "MANIFEST.md").read_text(encoding="utf-8").startswith("# Evidence pack manifest")
     assert "evidence-sources.json" not in {f["path"] for f in m["files"]}, "the sidecar is provenance, not evidence"
     assert m["disclaimer"].startswith("Preparation for a human assessor")
 
@@ -56,7 +56,7 @@ def test_build_prints_the_manifest_hash(tmp_path):
 
 def test_build_refuses_a_non_empty_or_nested_output(tmp_path):
     (tmp_path / "busy").mkdir()
-    (tmp_path / "busy" / "x").write_text("x")
+    (tmp_path / "busy" / "x").write_text("x", encoding="utf-8")
     rc, _, err = run_main(mod, ["build", str(EXPORTS), "--out", str(tmp_path / "busy")])
     assert rc == 2 and "not empty" in err
     work = tmp_path / "exports"
@@ -68,9 +68,9 @@ def test_build_refuses_a_non_empty_or_nested_output(tmp_path):
 def test_build_rejects_unknown_sidecar_keys(tmp_path):
     work = tmp_path / "exports"
     shutil.copytree(EXPORTS, work)
-    side = json.loads((work / "evidence-sources.json").read_text())
+    side = json.loads((work / "evidence-sources.json").read_text(encoding="utf-8"))
     side["files"]["github/repo.json"]["approved_by_auditor"] = True
-    (work / "evidence-sources.json").write_text(json.dumps(side))
+    (work / "evidence-sources.json").write_text(json.dumps(side), encoding="utf-8")
     rc, _, err = run_main(mod, ["build", str(work), "--out", str(tmp_path / "p")])
     assert rc == 2 and "approved_by_auditor" in err
 
@@ -106,7 +106,7 @@ def test_build_empty_folder_is_bad_input(tmp_path):
 def test_redacted_build_keeps_paths_and_hashes(tmp_path):
     rc, _, _ = run_main(mod, ["build", str(EXPORTS), "--out", str(tmp_path / "p"), "--redact"])
     assert rc == 0
-    text = (tmp_path / "p" / "manifest.json").read_text()
+    text = (tmp_path / "p" / "manifest.json").read_text(encoding="utf-8")
     assert "jane.doe@example.com" not in text and "@redacted.invalid" in text
     rc, out = run_json(mod, ["verify", str(tmp_path / "p"), "--json"])
     assert rc == 0 and out["ok"]
@@ -140,7 +140,7 @@ def test_verify_markdown_says_failed():
 
 def test_verify_detects_missing_and_unexpected_files(pack):
     (pack / "evidence" / "github" / "codeowners.json").unlink()
-    (pack / "evidence" / "github" / "added-later.json").write_text("{}")
+    (pack / "evidence" / "github" / "added-later.json").write_text("{}", encoding="utf-8")
     rc, out = run_json(mod, ["verify", str(pack), "--json"])
     assert rc == 1
     assert {(p["path"], p["status"]) for p in out["problems"]} == {("github/codeowners.json", "missing"),
@@ -185,7 +185,7 @@ def test_sidecar_skeleton_lists_every_file_and_refuses_to_overwrite(tmp_path):
     (work / "evidence-sources.json").unlink()
     rc, _, _ = run_main(mod, ["sidecar", str(work)])
     assert rc == 0
-    side = json.loads((work / "evidence-sources.json").read_text())
+    side = json.loads((work / "evidence-sources.json").read_text(encoding="utf-8"))
     assert len(side["files"]) == 17 and side["files"]["aws/password-policy.json"] == {"source_system": "aws", "command": ""}
     rc, _, err = run_main(mod, ["sidecar", str(work)])
     assert rc == 2 and "already exists" in err

@@ -93,7 +93,7 @@ def test_markdown_carries_the_disclaimer_and_rule(pack):
 def test_out_file_is_written(pack, tmp_path):
     out_file = tmp_path / "cm.json"
     rc, _, _ = run_main(mod, [str(pack), "--framework", "iso27001", "--map", str(STARTER_MAP), "--out", str(out_file)])
-    assert rc == 0 and json.loads(out_file.read_text())["framework"] == "iso27001"
+    assert rc == 0 and json.loads(out_file.read_text(encoding="utf-8"))["framework"] == "iso27001"
 
 
 def test_redact_tokenises_emails_in_citations(tmp_path, write):
@@ -113,11 +113,11 @@ def _mini_pack(tmp_path, files: dict, raw: dict | None = None):
     for rel, data in files.items():
         p = src / rel
         p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text(json.dumps(data))
+        p.write_text(json.dumps(data), encoding="utf-8")
     for rel, text in (raw or {}).items():
         p = src / rel
         p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text(text)
+        p.write_text(text, encoding="utf-8")
     rc, _, err = run_main(pk, ["build", str(src), "--out", str(tmp_path / "pack")])
     assert rc == 0, err
     return tmp_path / "pack"
