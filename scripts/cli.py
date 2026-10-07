@@ -15,7 +15,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-__version__ = "0.1.1"
+__version__ = "0.2.0"
 
 PROG = "compliance-evidence"
 ROOT = Path(__file__).resolve().parents[1]
@@ -52,6 +52,16 @@ COMMANDS: dict[str, tuple[str, str, str]] = {
         "auditor-narrative-drafter",
         "narrative_lint.py",
         "Reject uncited, over-certain or copied wording in a narrative",
+    ),
+    "questionnaire": (
+        "security-questionnaire-drafter",
+        "questionnaire.py",
+        "Draft cited security questionnaire answers from a pack and policies",
+    ),
+    "e8": (
+        "essential-eight-evidence-map",
+        "e8_map.py",
+        "Map a pack to the Essential Eight and the level each strategy can claim",
     ),
 }
 

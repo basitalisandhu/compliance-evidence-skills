@@ -10,7 +10,8 @@ Rules (each problem is reported with its line number):
                     inline citation [evidence: <file>#<field>]. Sentences that say "not assessable" are allowed.
   UNKNOWN-CITATION  a citation's file#field is not cited anywhere in the control map, so it cannot be traced to a
                     hashed file in the pack
-  WRONG-CONTROL-CITATION a known citation under a control heading is not mapped to that control
+  WRONG-CONTROL-CITATION
+                    a known citation under a control heading is not mapped to that control
   STATE-MISMATCH    under a "## <identifier>" heading, a sentence claims support while the control map's state for
                     that control is contradicted or not assessable, or claims a contradiction while the state is
                     supported

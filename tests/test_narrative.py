@@ -61,16 +61,16 @@ def test_unknown_control_is_bad_input():
 
 def test_not_a_control_map_is_bad_input(tmp_path):
     p = tmp_path / "x.json"
-    p.write_text(json.dumps({"rows": []}))
+    p.write_text(json.dumps({"rows": []}), encoding="utf-8")
     rc, _, err = run_main(mod, [str(p), "--all"])
     assert rc == 2 and "not a control map" in err
 
 
 def test_redact_and_json(tmp_path):
-    cm = json.loads(CMAP.read_text())
+    cm = json.loads(CMAP.read_text(encoding="utf-8"))
     cm["controls"][0]["gaps"] = ["owner jane.doe@example.com did not export"]
     p = tmp_path / "cm.json"
-    p.write_text(json.dumps(cm))
+    p.write_text(json.dumps(cm), encoding="utf-8")
     rc, out = run_json(mod, [str(p), "--all", "--json", "--redact"])
     assert rc == 0 and "jane.doe@example.com" not in out["markdown"] and "@redacted.invalid" in out["markdown"]
     assert out["disclaimer"].startswith("Preparation for a human assessor")
