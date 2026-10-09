@@ -58,10 +58,10 @@ This pack is also part of [claude-skills](https://github.com/basitalisandhu/clau
 The scripts are also published as one container image on GitHub Packages (linux/amd64 and linux/arm64) when a version is tagged. The entrypoint is `compliance-evidence <subcommand> [args]`; mount the files at `/work`, the working directory:
 
 ```bash
-docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.2.0 pack build evidence-2026-q3 --out pack-2026-q3
-docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.2.0 map pack-2026-q3 --framework soc2 \
+docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.3.0 pack build evidence-2026-q3 --out pack-2026-q3
+docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.3.0 map pack-2026-q3 --framework soc2 \
   --map /app/plugins/compliance-evidence/skills/control-map-from-exports/references/starter-map.yaml
-docker run --rm ghcr.io/basitalisandhu/compliance-evidence-skills:0.2.0 --help
+docker run --rm ghcr.io/basitalisandhu/compliance-evidence-skills:0.3.0 --help
 ```
 
 | Subcommand | Script (skill) |
@@ -78,10 +78,10 @@ docker run --rm ghcr.io/basitalisandhu/compliance-evidence-skills:0.2.0 --help
 Every subcommand passes its arguments to the script unchanged. The image has no pip dependencies and runs as uid 1000; on Linux add `--user "$(id -u):$(id -g)"` if the mounted folder is not writable by that uid. From a checkout, `python3 scripts/cli.py` is the same dispatcher. Released images are signed with cosign (keyless) and carry a build provenance attestation and an SPDX SBOM:
 
 ```bash
-cosign verify ghcr.io/basitalisandhu/compliance-evidence-skills:0.2.0 \
+cosign verify ghcr.io/basitalisandhu/compliance-evidence-skills:0.3.0 \
   --certificate-identity-regexp '^https://github.com/basitalisandhu/compliance-evidence-skills/' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com
-gh attestation verify oci://ghcr.io/basitalisandhu/compliance-evidence-skills:0.2.0 --owner basitalisandhu
+gh attestation verify oci://ghcr.io/basitalisandhu/compliance-evidence-skills:0.3.0 --owner basitalisandhu
 ```
 
 ## When to use this
