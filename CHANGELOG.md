@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows Keep
 
 ## [Unreleased]
 
+### Added
+
+- Reject citations attributed to a control that does not map that evidence.
+
 ## [0.2.0] - 2026-10-05
 
 ### Added

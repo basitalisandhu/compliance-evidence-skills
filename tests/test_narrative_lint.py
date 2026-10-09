@@ -38,6 +38,19 @@ def test_clean_cited_text_passes(write):
     assert rc == 0 and problems == []
 
 
+def test_known_citation_under_the_wrong_control_is_reported(write):
+    body = "## A.8.12\n\nThe export records `true` [evidence: aws/cloudtrail-status-org-trail.json#IsLogging].\n"
+    rc, problems = lint_text(write, body)
+    assert rc == 1 and problems == [("WRONG-CONTROL-CITATION", 7)]
+    rc, problems = lint_text(write, body.replace("A.8.12", "A.8.15"))
+    assert rc == 0 and problems == []
+
+
+def test_unknown_citation_is_not_reported_twice(write):
+    _, problems = lint_text(write, "## A.8.15\n\nObserved [evidence: missing.json#field].\n")
+    assert rules(problems) == ["UNKNOWN-CITATION"]
+
+
 def test_uncited_outcome_claim(write):
     rc, problems = lint_text(write, "## A.8.32\n\nAll changes are reviewed and the control is operating.\n")
     assert rc == 1 and rules(problems) == ["UNCITED-CLAIM"]
@@ -55,7 +68,7 @@ def test_unknown_citation(write):
 
 def test_state_mismatch_both_ways(write):
     _, problems = lint_text(write, "## A.8.16\n\nThe exports support this [evidence: aws/cloudtrail-status-org-trail.json#IsLogging].\n")
-    assert rules(problems) == ["STATE-MISMATCH"]
+    assert rules(problems) == ["STATE-MISMATCH", "WRONG-CONTROL-CITATION"]
     _, problems = lint_text(write, "## A.8.15\n\nThe export contradicts this [evidence: aws/cloudtrail-status-org-trail.json#IsLogging].\n")
     assert rules(problems) == ["STATE-MISMATCH"]
     _, problems = lint_text(write, "## A.8.12\n\nThe exports do not support this "
