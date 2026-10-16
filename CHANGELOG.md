@@ -4,6 +4,18 @@ All notable changes to this project are documented here. The format follows Keep
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-16
+
+### Added
+
+- `vendor-attestation-digest`: `vendor_attestations.py` reads a register of vendor SOC 2 Type 1 and Type 2 reports, ISO 27001 certificates, bridge letters, penetration test summaries and other attestations (CSV or JSON, one row per document with the page each field came from) and a vendor list (services used, criticality, owner), optionally hashes each source document found in `--docs`, and flags `no-attestation`, `expired`, `expiring`, `coverage-gap` (SOC 2 period ended longer ago than the bridge window with no bridge letter), `bridge-letter-expired`, `type1-only` (high criticality), `opinion-not-unqualified`, `exceptions-noted`, `scope-mismatch`, `cuecs-not-reviewed`, `missing-field` (never guessed) and `source-unverified`. Report age, bridge window and expiry warning are options with the skill's defaults (12 months, 3 months, 60 days); `--as-of` is required. Digest per vendor ordered by criticality with owner actions; Markdown, JSON, `--csv` (one row per finding), `--out`, `--redact`. Exit 0 no findings, 1 findings, 2 bad input. 17 tests with synthetic vendors and documents. It does not read PDFs.
+- `maester-control-map`: `maester_map.py` reads a Maester results file (`Invoke-Maester -OutputJsonFile`; a missing test Id is taken from Name) and a mapping CSV (exact test id, id prefix with `*`, or `tag:<Tag>`, to ISO 27001 or SOC 2 identifiers checked against the bundled identifier lists or `--identifiers`), and reports per control `supported` (a mapped test Passed, none Failed or Investigate), `contradicted` (a mapped test Failed) or `not assessable` (only Skipped, NotRun or Error, or Investigate as "needs human review"), with a citation per test. Also writes the test list with `iso27001` and `soc2` columns (`--annotated-csv`), lists unmapped tests and map rows that matched nothing, reports the file's SHA-256 and ExecutedAt, and warns when the run is older than `--max-age-days` (default 30) or the counts disagree. Ships `references/example-map.csv`, five rows labelled as an example to review. Markdown, JSON, `--out`, `--redact` (TenantName, TenantId, e-mail addresses). Exit 0 nothing contradicted and not stale, 1 otherwise, 2 bad input. 21 tests with a synthetic results file (tenant contoso-example) and malformed variants.
+- Dispatcher subcommands `vendors` and `maester`; the container check in CI runs their `--help`, and `tests/test_cli.py` runs `maester` through the dispatcher.
+
+### Changed
+
+- Version 0.4.0 in `pyproject.toml`, `plugin.json`, `marketplace.json`, the dispatcher, the pack builder's tool string and the README container examples; the READMEs, plugin and marketplace descriptions list nine skills and a sample output section for the two new ones.
+
 ## [0.3.0] - 2026-10-09
 
 ### Added

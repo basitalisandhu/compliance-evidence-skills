@@ -15,7 +15,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 PROG = "compliance-evidence"
 ROOT = Path(__file__).resolve().parents[1]
@@ -62,6 +62,16 @@ COMMANDS: dict[str, tuple[str, str, str]] = {
         "essential-eight-evidence-map",
         "e8_map.py",
         "Map a pack to the Essential Eight and the level each strategy can claim",
+    ),
+    "vendors": (
+        "vendor-attestation-digest",
+        "vendor_attestations.py",
+        "Digest vendor SOC 2 reports, ISO certificates and bridge letters into owner actions",
+    ),
+    "maester": (
+        "maester-control-map",
+        "maester_map.py",
+        "Map Maester test results to ISO 27001 or SOC 2 identifiers with a mapping file",
     ),
 }
 

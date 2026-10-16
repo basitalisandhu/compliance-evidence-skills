@@ -1,0 +1,10 @@
+match,framework,control,note
+tag:MFA,iso27001,A.8.5,"EXAMPLE to review: tests tagged MFA read multi-factor sign-in settings; confirm the tag exists in your own results file"
+tag:MFA,soc2,CC6.1,"EXAMPLE to review: MFA settings are one part of logical access control, never the whole of it"
+CIS.M365.1.1.*,iso27001,A.8.2,"EXAMPLE to review: CIS Microsoft 365 benchmark section 1.1 is about administrative accounts"
+EIDSCA.*,soc2,CC6.1,"EXAMPLE to review: EIDSCA tests read Entra ID authentication and authorisation settings; narrow it to the tests you agree with the assessor"
+MS.AAD.3.*,iso27001,A.8.5,"EXAMPLE to review: section 3 of the CISA SCuBA Entra ID baseline is about strong authentication"
+MT.1001,iso27001,A.8.1,fixture row: device compliance in Conditional Access
+MT.1005,iso27001,A.5.15,fixture row: returns Investigate
+MT.1021,iso27001,A.8.9,fixture row: Id taken from Name; returns Error
+ORCA.*,soc2,CC7.2,fixture row: matches no test

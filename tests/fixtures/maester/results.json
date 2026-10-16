@@ -1,0 +1,259 @@
+{
+  "Result": "Failed",
+  "ExecutedAt": "2026-10-10T09:15:00.1234567+10:00",
+  "TenantId": "00000000-0000-0000-0000-000000000001",
+  "TenantName": "contoso-example",
+  "TotalCount": 10,
+  "PassedCount": 5,
+  "FailedCount": 1,
+  "SkippedCount": 1,
+  "NotRunCount": 1,
+  "ErrorCount": 1,
+  "InvestigateCount": 1,
+  "Tests": [
+    {
+      "Index": 1,
+      "Id": "MT.1001",
+      "Title": "At least one Conditional Access policy requires a compliant device",
+      "Name": "MT.1001: At least one Conditional Access policy requires a compliant device",
+      "HelpUrl": "https://maester.dev/docs/tests/MT.1001",
+      "Severity": "High",
+      "Tag": [
+        "Maester",
+        "CA",
+        "Security",
+        "All"
+      ],
+      "Result": "Passed",
+      "Block": "Example block",
+      "Duration": "00:00:00.120",
+      "ResultDetail": {
+        "TestTitle": "At least one Conditional Access policy requires a compliant device",
+        "TestResult": "Synthetic result for tests. Contact it-admin@example.com.",
+        "TestSkipped": "",
+        "SkippedReason": "",
+        "TestInvestigate": false,
+        "Severity": "High"
+      }
+    },
+    {
+      "Index": 2,
+      "Id": "MT.1005",
+      "Title": "Every Conditional Access policy excludes an emergency access account",
+      "Name": "MT.1005: Every Conditional Access policy excludes an emergency access account",
+      "HelpUrl": "https://maester.dev/docs/tests/MT.1005",
+      "Severity": "Medium",
+      "Tag": [
+        "Maester",
+        "CA",
+        "Security",
+        "All"
+      ],
+      "Result": "Investigate",
+      "Block": "Example block",
+      "Duration": "00:00:00.120",
+      "ResultDetail": {
+        "TestTitle": "Every Conditional Access policy excludes an emergency access account",
+        "TestResult": "Synthetic result for tests. Contact it-admin@example.com.",
+        "TestSkipped": "",
+        "SkippedReason": "",
+        "TestInvestigate": true,
+        "Severity": "Medium"
+      }
+    },
+    {
+      "Index": 3,
+      "Id": "CIS.M365.1.1.1",
+      "Title": "Administrative accounts are cloud-only",
+      "Name": "CIS.M365.1.1.1: Administrative accounts are cloud-only",
+      "HelpUrl": "https://maester.dev/docs/tests/CIS.M365.1.1.1",
+      "Severity": "High",
+      "Tag": [
+        "CIS",
+        "L1"
+      ],
+      "Result": "Passed",
+      "Block": "Example block",
+      "Duration": "00:00:00.120",
+      "ResultDetail": {
+        "TestTitle": "Administrative accounts are cloud-only",
+        "TestResult": "Synthetic result for tests. Contact it-admin@example.com.",
+        "TestSkipped": "",
+        "SkippedReason": "",
+        "TestInvestigate": false,
+        "Severity": "High"
+      }
+    },
+    {
+      "Index": 4,
+      "Id": "CIS.M365.1.1.3",
+      "Title": "Between two and four Global Administrators are assigned",
+      "Name": "CIS.M365.1.1.3: Between two and four Global Administrators are assigned",
+      "HelpUrl": "https://maester.dev/docs/tests/CIS.M365.1.1.3",
+      "Severity": "High",
+      "Tag": [
+        "CIS",
+        "L1"
+      ],
+      "Result": "Failed",
+      "Block": "Example block",
+      "Duration": "00:00:00.120",
+      "ResultDetail": {
+        "TestTitle": "Between two and four Global Administrators are assigned",
+        "TestResult": "Synthetic result for tests. Contact it-admin@example.com.",
+        "TestSkipped": "",
+        "SkippedReason": "",
+        "TestInvestigate": false,
+        "Severity": "High"
+      }
+    },
+    {
+      "Index": 5,
+      "Id": "EIDSCA.AF01",
+      "Title": "Authentication method policy: FIDO2 security keys enabled",
+      "Name": "EIDSCA.AF01: Authentication method policy: FIDO2 security keys enabled",
+      "HelpUrl": "https://maester.dev/docs/tests/EIDSCA.AF01",
+      "Severity": "High",
+      "Tag": [
+        "EIDSCA",
+        "Security",
+        "MFA"
+      ],
+      "Result": "Passed",
+      "Block": "Example block",
+      "Duration": "00:00:00.120",
+      "ResultDetail": {
+        "TestTitle": "Authentication method policy: FIDO2 security keys enabled",
+        "TestResult": "Synthetic result for tests. Contact it-admin@example.com.",
+        "TestSkipped": "",
+        "SkippedReason": "",
+        "TestInvestigate": false,
+        "Severity": "High"
+      }
+    },
+    {
+      "Index": 6,
+      "Id": "EIDSCA.AP04",
+      "Title": "Authorisation policy: guest invite restrictions",
+      "Name": "EIDSCA.AP04: Authorisation policy: guest invite restrictions",
+      "HelpUrl": "https://maester.dev/docs/tests/EIDSCA.AP04",
+      "Severity": "Medium",
+      "Tag": [
+        "EIDSCA",
+        "Security"
+      ],
+      "Result": "Skipped",
+      "Block": "Example block",
+      "Duration": "00:00:00.120",
+      "ResultDetail": {
+        "TestTitle": "Authorisation policy: guest invite restrictions",
+        "TestResult": "Synthetic result for tests. Contact it-admin@example.com.",
+        "TestSkipped": "NotLicensedEntraIDP2",
+        "SkippedReason": "Not licensed",
+        "TestInvestigate": false,
+        "Severity": "Medium"
+      }
+    },
+    {
+      "Index": 7,
+      "Id": "MS.AAD.3.1",
+      "Title": "Phishing-resistant MFA is required for all users",
+      "Name": "MS.AAD.3.1: Phishing-resistant MFA is required for all users",
+      "HelpUrl": "https://maester.dev/docs/tests/MS.AAD.3.1",
+      "Severity": "High",
+      "Tag": [
+        "CISA",
+        "MFA"
+      ],
+      "Result": "NotRun",
+      "Block": "Example block",
+      "Duration": "00:00:00.120",
+      "ResultDetail": {
+        "TestTitle": "Phishing-resistant MFA is required for all users",
+        "TestResult": "Synthetic result for tests. Contact it-admin@example.com.",
+        "TestSkipped": "",
+        "SkippedReason": "",
+        "TestInvestigate": false,
+        "Severity": "High"
+      }
+    },
+    {
+      "Index": 8,
+      "Name": "MT.1021: Security defaults state can be read",
+      "HelpUrl": "https://maester.dev/docs/tests/MT.1021",
+      "Severity": "Low",
+      "Tag": [
+        "Maester"
+      ],
+      "Result": "Error",
+      "Block": "Example block",
+      "Duration": "00:00:00.120",
+      "ResultDetail": {
+        "TestTitle": "Security defaults state can be read",
+        "TestResult": "Synthetic result for tests. Contact it-admin@example.com.",
+        "TestSkipped": "",
+        "SkippedReason": "",
+        "TestInvestigate": false,
+        "Severity": "Low"
+      }
+    },
+    {
+      "Index": 9,
+      "Id": "MT.1006",
+      "Title": "Administrators are required to use MFA",
+      "Name": "MT.1006: Administrators are required to use MFA",
+      "HelpUrl": "https://maester.dev/docs/tests/MT.1006",
+      "Severity": "Critical",
+      "Tag": [
+        "Maester",
+        "MFA"
+      ],
+      "Result": "Passed",
+      "Block": "Example block",
+      "Duration": "00:00:00.120",
+      "ResultDetail": {
+        "TestTitle": "Administrators are required to use MFA",
+        "TestResult": "Synthetic result for tests. Contact it-admin@example.com.",
+        "TestSkipped": "",
+        "SkippedReason": "",
+        "TestInvestigate": false,
+        "Severity": "Critical"
+      }
+    },
+    {
+      "Index": 10,
+      "Id": "MT.1033",
+      "Title": "Users cannot create app registrations",
+      "Name": "MT.1033: Users cannot create app registrations",
+      "HelpUrl": "https://maester.dev/docs/tests/MT.1033",
+      "Severity": "Medium",
+      "Tag": [
+        "Maester"
+      ],
+      "Result": "Passed",
+      "Block": "Example block",
+      "Duration": "00:00:00.120",
+      "ResultDetail": {
+        "TestTitle": "Users cannot create app registrations",
+        "TestResult": "Synthetic result for tests. Contact it-admin@example.com.",
+        "TestSkipped": "",
+        "SkippedReason": "",
+        "TestInvestigate": false,
+        "Severity": "Medium"
+      }
+    }
+  ],
+  "Blocks": [
+    {
+      "Name": "Example block",
+      "Result": "Failed",
+      "FailedCount": 1,
+      "PassedCount": 5,
+      "SkippedCount": 1,
+      "NotRunCount": 1,
+      "Tag": [
+        "Maester"
+      ]
+    }
+  ]
+}

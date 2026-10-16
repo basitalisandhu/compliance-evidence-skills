@@ -51,6 +51,14 @@ def test_every_skill_script_has_a_subcommand():
     assert scripts == covered
 
 
+def test_new_subcommands_for_0_4_0_are_registered():
+    cli = load_cli()
+    assert cli.script_path("vendors").name == "vendor_attestations.py"
+    assert cli.script_path("maester").name == "maester_map.py"
+    result = run("maester", "tests/fixtures/maester/results.json", "--map", "tests/fixtures/maester/map.csv", "--as-of", "2026-10-16")
+    assert result.returncode == 1 and "| iso27001 | A.8.2 |" in result.stdout
+
+
 def test_help_subcommand_shows_the_script_help():
     result = run("help", "pack")
     assert result.returncode == 0
