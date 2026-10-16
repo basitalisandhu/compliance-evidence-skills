@@ -1,12 +1,12 @@
 # Claude Code skills for compliance evidence
 
-**Compliance evidence skills for Claude Code: build integrity-checked evidence packs from GitHub, AWS and Microsoft 365 exports, map them to ISO 27001 and SOC 2 control identifiers and the Essential Eight maturity levels, and draft auditor narratives and security questionnaire answers that cite evidence or say not assessable.**
+**Compliance evidence skills for Claude Code: build integrity-checked evidence packs from GitHub, AWS and Microsoft 365 exports, map them to ISO 27001 and SOC 2 control identifiers and the Essential Eight maturity levels, digest vendor SOC 2 reports and certificates, map Maester results to controls, and draft auditor narratives and security questionnaire answers that cite evidence or say not assessable.**
 
-compliance-evidence-skills is a Claude Code plugin marketplace with one plugin, `compliance-evidence`, holding seven skills. Each skill is a fixed procedure plus a tested Python script (standard library only). The skills tell Claude which read-only exports to take and which permission each needs; the scripts then work on the saved files: hash them into a pack with a manifest, map them to control identifiers, and draft narratives in which every evidence statement cites a file and field.
+compliance-evidence-skills is a Claude Code plugin marketplace with one plugin, `compliance-evidence`, holding nine skills. Each skill is a fixed procedure plus a tested Python script (standard library only). The skills tell Claude which read-only exports to take and which permission each needs; the scripts then work on the saved files: hash them into a pack with a manifest, map them to control identifiers, and draft narratives in which every evidence statement cites a file and field.
 
 It is written for the people who prepare an ISO 27001 or SOC 2 assessment in a small or mid-sized organisation: engineers and IT administrators who own GitHub, AWS and Microsoft 365, and the security or compliance lead who has to hand evidence to an assessor. It exists because evidence is still mostly screenshots and loose exports with no record of who took them, when, or with which command, and because tools that turn an API error into a control failure (or a missing file into a pass) cost hours of argument during fieldwork. These skills keep three result states only, `supported`, `contradicted` and `not assessable`, and never mark a control supported without a cited evidence file and field.
 
-Common searches it answers: SOC 2 Type II evidence from GitHub and AWS, an ISO 27001 or SOC 2 readiness assessment, packing a Vanta or Drata export with a hash manifest for the assessor, answering a customer security questionnaire from evidence ("fill in this security questionnaire" without inventing answers), and an Essential Eight maturity self-assessment from evidence ("what Essential Eight maturity level can we claim?").
+Common searches it answers: SOC 2 Type II evidence from GitHub and AWS, an ISO 27001 or SOC 2 readiness assessment, packing a Vanta or Drata export with a hash manifest for the assessor, answering a customer security questionnaire from evidence ("fill in this security questionnaire" without inventing answers), an Essential Eight maturity self-assessment from evidence ("what Essential Eight maturity level can we claim?"), vendor SOC 2 report and bridge letter tracking ("which vendor SOC 2 reports are out of date?"), and an ISO 27001 control column for Maester test results.
 
 No network access from the scripts, no telemetry. All inputs are exports already on disk.
 
@@ -58,10 +58,10 @@ This pack is also part of [claude-skills](https://github.com/basitalisandhu/clau
 The scripts are also published as one container image on GitHub Packages (linux/amd64 and linux/arm64) when a version is tagged. The entrypoint is `compliance-evidence <subcommand> [args]`; mount the files at `/work`, the working directory:
 
 ```bash
-docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.3.0 pack build evidence-2026-q3 --out pack-2026-q3
-docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.3.0 map pack-2026-q3 --framework soc2 \
+docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.4.0 pack build evidence-2026-q3 --out pack-2026-q3
+docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.4.0 map pack-2026-q3 --framework soc2 \
   --map /app/plugins/compliance-evidence/skills/control-map-from-exports/references/starter-map.yaml
-docker run --rm ghcr.io/basitalisandhu/compliance-evidence-skills:0.3.0 --help
+docker run --rm ghcr.io/basitalisandhu/compliance-evidence-skills:0.4.0 --help
 ```
 
 | Subcommand | Script (skill) |
@@ -74,14 +74,16 @@ docker run --rm ghcr.io/basitalisandhu/compliance-evidence-skills:0.3.0 --help
 | `narrative-lint` | `narrative_lint.py` (auditor-narrative-drafter) |
 | `questionnaire` | `questionnaire.py` (security-questionnaire-drafter) |
 | `e8` | `e8_map.py` (essential-eight-evidence-map) |
+| `vendors` | `vendor_attestations.py` (vendor-attestation-digest) |
+| `maester` | `maester_map.py` (maester-control-map) |
 
 Every subcommand passes its arguments to the script unchanged. The image has no pip dependencies and runs as uid 1000; on Linux add `--user "$(id -u):$(id -g)"` if the mounted folder is not writable by that uid. From a checkout, `python3 scripts/cli.py` is the same dispatcher. Released images are signed with cosign (keyless) and carry a build provenance attestation and an SPDX SBOM:
 
 ```bash
-cosign verify ghcr.io/basitalisandhu/compliance-evidence-skills:0.3.0 \
+cosign verify ghcr.io/basitalisandhu/compliance-evidence-skills:0.4.0 \
   --certificate-identity-regexp '^https://github.com/basitalisandhu/compliance-evidence-skills/' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com
-gh attestation verify oci://ghcr.io/basitalisandhu/compliance-evidence-skills:0.3.0 --owner basitalisandhu
+gh attestation verify oci://ghcr.io/basitalisandhu/compliance-evidence-skills:0.4.0 --owner basitalisandhu
 ```
 
 ## When to use this
@@ -93,6 +95,8 @@ gh attestation verify oci://ghcr.io/basitalisandhu/compliance-evidence-skills:0.
 - Control narratives or PBC answers that must not claim more than the evidence shows: `auditor-narrative-drafter`
 - A customer or vendor security questionnaire to answer from your own policies and evidence, with every unknown left open for an owner: `security-questionnaire-drafter`
 - Which Essential Eight requirements your evidence covers at ML1 to ML3, and the level each strategy can claim today: `essential-eight-evidence-map`
+- Which vendor SOC 2 reports, ISO 27001 certificates and bridge letters are expired, expiring, qualified or out of scope, and what each vendor owner has to chase: `vendor-attestation-digest`
+- Which ISO 27001 or SOC 2 controls a Maester run of Microsoft 365 tests supports or contradicts, with a control column on every test: `maester-control-map`
 
 ## Skills
 
@@ -105,6 +109,57 @@ gh attestation verify oci://ghcr.io/basitalisandhu/compliance-evidence-skills:0.
 | `auditor-narrative-drafter` | "draft the narrative for A.8.15", "check this narrative before it goes out" | `narrative.py` with `[evidence: file#field]` on every evidence sentence; `narrative_lint.py` rejects uncited claims, untraceable citations, state mismatches, certainty wording and listed copied phrases |
 | `security-questionnaire-drafter` | "fill in this security questionnaire", customer due diligence, CAIQ or SIG-style sheets saved as CSV or Markdown | `questionnaire.py`: one draft per question citing policy sections and hashed evidence files, `not assessable` when nothing matches, control map states carried through, CSV with an owner column |
 | `essential-eight-evidence-map` | "what Essential Eight maturity level can we claim?", preparing for an Essential Eight assessment | `e8_map.py`: the 153 requirements of the November 2023 maturity model per strategy and level with a state each, the claimable level per strategy, unusable evidence and mapping candidates |
+| `vendor-attestation-digest` | "which vendor SOC 2 reports are out of date?", supplier reviews, an audit request for vendor assurance | `vendor_attestations.py`: per vendor and document state, 12 finding types (expired, coverage gap without a bridge letter, qualified opinion, exceptions, scope mismatch, unreviewed user entity controls, missing fields), owner actions by criticality, source document hashes |
+| `maester-control-map` | "which ISO 27001 controls do our Maester results support?", a control column on Maester results | `maester_map.py`: per control state from mapped tests (Skipped, NotRun, Error and Investigate never count as support), the test list as CSV with control columns, unmapped tests and unmatched map rows, the run's hash and a stale warning |
+
+## Sample output: vendor attestations and Maester results
+
+From a checkout, on the synthetic fixtures (trimmed to the summary tables):
+
+```bash
+python3 plugins/compliance-evidence/skills/vendor-attestation-digest/scripts/vendor_attestations.py \
+  --register tests/fixtures/vendors/register.csv --vendors tests/fixtures/vendors/vendors.csv \
+  --docs tests/fixtures/vendors/docs --as-of 2026-10-16
+```
+
+```text
+9 vendors, 11 documents, 13 findings. Source documents were hashed from --docs.
+
+| Vendor | Criticality | Owner | State | Findings |
+|---|---|---|---|---|
+| Example Hosting | high | jane.doe@example.com | contradicted | bridge-letter-expired, exceptions-noted |
+| Example Mail | high | Sam Lee | contradicted | coverage-gap, type1-only, scope-mismatch |
+| Example Signing | high | jane.doe@example.com | contradicted | opinion-not-unqualified, exceptions-noted, cuecs-not-reviewed |
+| Example Analytics | medium | Priya Shah | not assessable | expiring, source-unverified |
+| Example Backup | medium | Alex Kim | not assessable | expired, missing-field |
+| Example DNS | medium | Alex Kim | supported | none |
+| Example Payroll | medium | Priya Shah | not assessable | no-attestation |
+| Example Fonts | low | Sam Lee | not assessable | none |
+| Example Unlisted | not in vendor list |  | supported | none |
+```
+
+```bash
+python3 plugins/compliance-evidence/skills/maester-control-map/scripts/maester_map.py tests/fixtures/maester/results.json \
+  --map tests/fixtures/maester/map.csv --as-of 2026-10-16 --annotated-csv /tmp/maester-annotated.csv
+```
+
+```text
+10 tests (5 Passed, 1 Failed, 1 Skipped, 1 NotRun, 1 Error, 1 Investigate); 9 mapped by map.csv.
+
+Freshness: run is 6 days old on 2026-10-16.
+
+| Framework | Control | Topic (paraphrase) | State | Passed | Failed | Investigate | Skipped | NotRun | Error |
+|---|---|---|---|---|---|---|---|---|---|
+| iso27001 | A.5.15 | Access to systems and data follows defined rules | not assessable | 0 | 0 | 1 | 0 | 0 | 0 |
+| iso27001 | A.8.1 | Company data on laptops and phones is protected through device management | supported | 1 | 0 | 0 | 0 | 0 | 0 |
+| iso27001 | A.8.2 | Administrative access is kept to few people and watched | contradicted | 1 | 1 | 0 | 0 | 0 | 0 |
+| iso27001 | A.8.5 | Sign-in uses strong methods such as multi-factor authentication | supported | 2 | 0 | 0 | 0 | 1 | 0 |
+| iso27001 | A.8.9 | System settings are recorded and drift is noticed | not assessable | 0 | 0 | 0 | 0 | 0 | 1 |
+| soc2 | CC6.1 | Logical access is controlled with identities, strong sign-in and access rules | supported | 2 | 0 | 0 | 1 | 1 | 0 |
+| soc2 | CC7.2 | Systems are monitored for signs of attack or failure | not assessable | 0 | 0 | 0 | 0 | 0 | 0 |
+```
+
+Both exit 1: the digest has findings for owners, and A.8.2 is contradicted by a failed test.
 
 ## Result states
 
@@ -125,10 +180,12 @@ Covered:
 - Microsoft 365 through the starter map: security defaults, Conditional Access MFA and legacy authentication policies, Intune compliance policies.
 - Security questionnaires as CSV or Markdown, answered by keyword match against policy sections and hashed pack files, or by control state when a question names a control identifier. XLSX, PDF and Word questionnaires need converting first, and matches need a human read.
 - The ASD Essential Eight Maturity Model (November 2023): all 153 requirement statements per strategy and level (CC BY 4.0), with the level each strategy can claim from the evidence you map. The script checks that mapped files are present, unchanged and recent; it does not read their content.
+- Vendor assurance documents (SOC 2 Type 1 and Type 2 reports, ISO 27001 certificates, bridge letters, penetration test summaries) through a register whose fields you take from each document with the page number. The script does not read PDFs.
+- Maester results files (`Invoke-Maester -OutputJsonFile`), mapped to identifiers through a CSV you own; an example map to review is included.
 
 Not covered:
 
-- Organisational controls that live in documents and records (policies, training, HR, supplier management, risk assessment, incident records). They stay `not assessable`.
+- Organisational controls that live in documents and records (policies, training, HR, risk assessment, incident records, and supplier management beyond the vendor attestation register). They stay `not assessable`.
 - Operating effectiveness over an audit period, sampling plans, and testing of design. Exports are a point in time.
 - GitHub organisation settings, other code hosts, AWS organisation-level design, Azure and Google Cloud.
 - The text of ISO/IEC 27001, ISO/IEC 27002 or the AICPA criteria. Use your licensed copies.

@@ -1,0 +1,1 @@
+Synthetic placeholder for dns-iso-certificate.txt: invented test data, not a real report.

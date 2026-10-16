@@ -1,0 +1,9 @@
+vendor,services_used,criticality,owner
+Example Hosting,Compute; Object storage,high,jane.doe@example.com
+Example Mail,Email; Archiving,high,Sam Lee
+Example Payroll,Payroll,medium,Priya Shah
+Example Analytics,Analytics platform,medium,Priya Shah
+Example Signing,E-signature,high,jane.doe@example.com
+Example Fonts,Web fonts,low,Sam Lee
+Example Backup,Offsite backup,medium,Alex Kim
+Example DNS,DNS,medium,Alex Kim

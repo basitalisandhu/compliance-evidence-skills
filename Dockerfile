@@ -29,7 +29,7 @@ RUN set -e; for d in /tmp/skills/*/scripts; do \
 FROM ${PYTHON_IMAGE}
 ARG VERSION=0.0.0-dev
 LABEL org.opencontainers.image.title="compliance-evidence-skills" \
-      org.opencontainers.image.description="Compliance evidence skill scripts (evidence pack, control map, GitHub and AWS evidence, narrative drafter and linter) behind one command" \
+      org.opencontainers.image.description="Compliance evidence skill scripts (evidence pack, control map, GitHub and AWS evidence, narrative drafter and linter, questionnaire, Essential Eight, vendor attestations, Maester map) behind one command" \
       org.opencontainers.image.source="https://github.com/basitalisandhu/compliance-evidence-skills" \
       org.opencontainers.image.url="https://github.com/basitalisandhu/compliance-evidence-skills" \
       org.opencontainers.image.licenses="MIT" \

@@ -1,0 +1,12 @@
+vendor,type,issuer,period_start,period_end,valid_from,valid_to,opinion,exceptions,scope_services,cuecs,cuecs_reviewed,source_file,source_page
+Example Hosting,soc2-type2,Example Audit LLP,2024-07-01,2025-06-30,,,unqualified,0,Compute; Object storage,Customers manage user access,yes,hosting-soc2-2025.txt,4
+Example Hosting,soc2-type2,Example Audit LLP,2025-07-01,2026-06-30,,,unqualified,2,Compute; Object storage,Customers manage user access; Customers enable MFA for their users,yes,hosting-soc2-2026.txt,4
+Example Hosting,bridge-letter,Example Hosting,,,2026-07-01,2026-09-30,,,,,,hosting-bridge-2026.txt,1
+Example Mail,soc2-type1,Example Audit LLP,,2026-03-31,,,unqualified,0,Email,none,,mail-soc2-type1-2026.txt,3
+Example Analytics,iso27001-certificate,Example Certification Ltd,,,2023-12-01,2026-11-30,,,Analytics platform,,,analytics-iso-certificate.txt,1
+Example Signing,soc2-type2,Example Assurance Partners,2025-04-01,2026-03-31,,,qualified,3,E-signature,Customers review the signer audit trail,,signing-soc2-2026.txt,7
+Example Signing,bridge-letter,Example Signing,,,2026-04-01,2026-12-31,,,,,,signing-bridge-2026.txt,1
+Example Backup,iso27001-certificate,Example Certification Ltd,,,2024-02-01,,,,Offsite backup,,,backup-iso-certificate.txt,1
+Example Backup,pentest-summary,Example Testers,,2025-08-01,,,,,,,,backup-pentest-2025.txt,2
+Example DNS,iso27001-certificate,Example Certification Ltd,,,2025-01-15,2028-01-14,,,DNS,,,dns-iso-certificate.txt,1
+Example Unlisted,other,Example Assessor,,,2026-01-01,2027-01-01,,,Ticketing,,,unlisted-attestation.txt,1
