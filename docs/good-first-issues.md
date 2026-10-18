@@ -14,17 +14,7 @@ To claim one, open an issue with the title below (or comment on the existing one
 - New subcommand option `expire --period-end-required`: files collected before `period.end` are reported with status `before-period-end`.
 - A fixture sidecar with a period and a test for a file before and after the end date.
 
-## 2. control-map-from-exports: report checks whose evidence glob matched nothing
-
-**Labels:** good first issue, control-map-from-exports, python
-
-**Context.** A check whose `evidence` pattern matches no pack file is `not assessable` with the gap "not in the pack". A typo in the map looks the same as a missing export.
-
-**Acceptance criteria.**
-- The report gains `unmatched_patterns`: every `evidence` pattern in the map that matched no file in the manifest.
-- The Markdown output lists them under a heading; a test with a misspelt pattern.
-
-## 3. github-change-control-evidence: dismissal of stale reviews
+## 2. github-change-control-evidence: dismissal of stale reviews
 
 **Labels:** good first issue, github-change-control-evidence, python
 
@@ -34,7 +24,7 @@ To claim one, open an issue with the title below (or comment on the existing one
 - New row `GH-DISMISS-STALE` (A.8.32, CC8.1): `supported` when true, `contradicted` when false, `not assessable` without branch protection; rulesets read `dismiss_stale_reviews_on_push`.
 - Fixture changes and tests for all three states; the docstring and `SKILL.md` list the row.
 
-## 4. aws-identity-and-logging-evidence: CloudTrail delivery freshness
+## 3. aws-identity-and-logging-evidence: CloudTrail delivery freshness
 
 **Labels:** good first issue, aws-identity-and-logging-evidence, python
 
@@ -44,7 +34,7 @@ To claim one, open an issue with the title below (or comment on the existing one
 - Config key `max_delivery_age_hours` (default 24); `AWS-CT-LOGGING` becomes `contradicted` when the latest delivery is older than the limit at `--as-of`, citing `LatestDeliveryTime`.
 - A fixture status file with an old delivery time and a test.
 
-## 5. auditor-narrative-drafter: per-control citation check
+## 4. auditor-narrative-drafter: per-control citation check
 
 **Labels:** good first issue, auditor-narrative-drafter, python
 
@@ -54,7 +44,7 @@ To claim one, open an issue with the title below (or comment on the existing one
 - New rule `WRONG-CONTROL-CITATION`: a citation under `## <identifier>` that the control map does not cite for that identifier.
 - A test with a citation moved to another control, and the existing drafts must still pass.
 
-## 6. control-map-from-exports: starter map entries for Microsoft 365 audit log retention
+## 5. control-map-from-exports: starter map entries for Microsoft 365 audit log retention
 
 **Labels:** good first issue, control-map-from-exports, documentation
 
