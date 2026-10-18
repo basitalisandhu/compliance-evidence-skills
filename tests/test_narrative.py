@@ -78,3 +78,41 @@ def test_redact_and_json(tmp_path):
 
 def test_backticks_in_values_cannot_break_out_of_code():
     assert mod.code("a`b\nc") == "`a'b c`"
+
+
+def test_control_ids_ignore_case_and_repeats():
+    out = draft("--control", "a.8.15", "--control", "A.8.15")
+    assert out.count("\n## A.8.15\n") == 1
+
+
+def _bad_map(tmp_path, mutate):
+    data = json.loads(CMAP.read_text(encoding="utf-8"))
+    mutate(data)
+    p = tmp_path / "cm.json"
+    p.write_text(json.dumps(data), encoding="utf-8")
+    return run_main(mod, [str(p), "--all", "--as-of", AS_OF])
+
+
+def test_empty_map_is_bad_input(tmp_path):
+    rc, _, err = _bad_map(tmp_path, lambda d: d.update(controls=[]))
+    assert rc == 2 and "no controls" in err
+
+
+def test_control_without_topic_is_bad_input_not_a_traceback(tmp_path):
+    rc, _, err = _bad_map(tmp_path, lambda d: d["controls"][0].pop("topic"))
+    assert rc == 2 and "controls[0] has no topic" in err
+
+
+def test_citation_without_field_is_bad_input(tmp_path):
+    def drop_field(d):
+        for c in d["controls"]:
+            for chk in c.get("checks") or []:
+                for cit in chk.get("citations") or []:
+                    cit.pop("field", None)
+    rc, _, err = _bad_map(tmp_path, drop_field)
+    assert rc == 2 and "citation without file or field" in err
+
+
+def test_unwritable_out_exits_2(tmp_path):
+    rc, _, err = run_main(mod, [str(CMAP), "--all", "--as-of", AS_OF, "--out", str(tmp_path / "no" / "n.md")])
+    assert rc == 2 and "cannot write" in err

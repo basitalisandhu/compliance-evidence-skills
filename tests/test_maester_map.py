@@ -30,7 +30,7 @@ def test_control_states_from_each_result_type():
     assert control(rep, "iso27001", "A.8.5")["state"] == "supported"
     assert control(rep, "iso27001", "A.8.1")["state"] == "supported"
     assert control(rep, "soc2", "CC6.1")["state"] == "supported"
-    assert control(rep, "soc2", "CC6.1")["counts"] == {"Passed": 2, "Failed": 0, "Skipped": 1, "NotRun": 1, "Error": 0, "Investigate": 0}
+    assert control(rep, "soc2", "CC6.1")["counts"] == {"Passed": 1, "Failed": 0, "Skipped": 1, "NotRun": 0, "Error": 0, "Investigate": 0}
     inv = control(rep, "iso27001", "A.5.15")
     assert inv["state"] == "not assessable" and inv["needs_human_review"] == ["MT.1005"]
     assert control(rep, "iso27001", "A.8.9")["state"] == "not assessable"  # Error only
@@ -45,7 +45,7 @@ def test_investigate_never_supports_and_failed_wins(tmp_path):
     m.write_text("match,framework,control,note\nMT.1005,iso27001,A.8.2,x\nCIS.M365.1.1.3,iso27001,A.8.2,x\n", encoding="utf-8")
     rc, rep = run_json(mod, [str(RESULTS), "--map", str(m), "--as-of", "2026-10-16", "--json"])
     assert rc == 1 and control(rep, "iso27001", "A.8.2")["state"] == "contradicted"
-    m.write_text("match,framework,control,note\nEIDSCA.AP04,soc2,CC6.1,x\nMS.AAD.3.1,soc2,CC6.1,x\n", encoding="utf-8")
+    m.write_text("match,framework,control,note\nEIDSCA.AP04,soc2,CC6.1,x\nCISA.MS.AAD.3.1,soc2,CC6.1,x\n", encoding="utf-8")
     _, rep = run_json(mod, [str(RESULTS), "--map", str(m), "--as-of", "2026-10-16", "--json"])
     assert control(rep, "soc2", "CC6.1")["state"] == "not assessable"  # Skipped and NotRun only
 
@@ -53,7 +53,7 @@ def test_investigate_never_supports_and_failed_wins(tmp_path):
 def test_matching_by_id_prefix_tag_and_name_fallback():
     _, rep = run_json(mod, [*BASE, "--json"])
     ids = {t["id"] for t in control(rep, "iso27001", "A.8.5")["tests"]}
-    assert ids == {"EIDSCA.AF01", "MS.AAD.3.1", "MT.1006"}  # tag:MFA plus MS.AAD.3.*
+    assert ids == {"EIDSCA.AF01", "CISA.MS.AAD.3.1", "MT.1006"}  # exact id, tag:EIDSCA.AF01 and CISA.MS.AAD.3.*
     assert [t["id"] for t in control(rep, "iso27001", "A.8.2")["tests"]] == ["CIS.M365.1.1.1", "CIS.M365.1.1.3"]
     assert [t["id"] for t in control(rep, "iso27001", "A.8.9")["tests"]] == ["MT.1021"]  # Id from Name
     assert control(rep, "iso27001", "A.8.2")["tests"][1]["citation"] == "[evidence: results.json#Tests[3].Result]"
@@ -166,3 +166,12 @@ def test_help_and_reads_files_only():
     text = (SKILL / "scripts" / "maester_map.py").read_text(encoding="utf-8")
     assert not re.search(r"^\s*(import|from)\s+(socket|subprocess|urllib|http|requests|ssl)\b", text, re.M)
     assert "os.environ" not in text and "getenv" not in text
+
+
+def test_example_map_uses_real_maester_test_ids():
+    # Maester has no MFA tag and its CISA tests are CISA.MS.AAD.*; checked against the Maester repository (2.3.0, 3.0
+    # previews). Tags are written differently by Maester 3, so the shipped example matches by id only.
+    rows = list(csv.DictReader((SKILL / "references" / "example-map.csv").read_text(encoding="utf-8").splitlines()))
+    for r in rows:
+        assert not r["match"].lower().startswith("tag:"), r
+        assert re.match(r"^(MT\.\d{4}|CIS\.M365\.|CISA\.MS\.|EIDSCA\.|ORCA\.)", r["match"]), r

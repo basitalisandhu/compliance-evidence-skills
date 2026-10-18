@@ -208,3 +208,69 @@ def test_needs_a_source_and_help(tmp_path):
     assert rc == 2 and "at least one of" in err
     rc, out, _ = run_main(mod, ["--help"])
     assert rc == 0 and "not assessable" in out and "Exit codes" in out and "--redact" in out
+
+
+def test_semicolon_csv_in_windows_1252(tmp_path, sources):
+    pol, pack = sources
+    q = tmp_path / "q.csv"  # Excel in a European locale: ";" separated, Windows-1252 ("é" is one byte)
+    q.write_bytes("ID;Question;Answer\nQ1;Do you enforce multi-factor authentication for all staff (accès)?;\n".encode("cp1252"))
+    rc, rep = run_json(mod, [str(q), "--policies", str(pol), "--evidence", str(pack), "--json"])
+    a = by_id(rep)["Q1"]
+    assert a["question"].endswith("(accès)?") and a["state"] == "supported"
+
+
+def test_utf16_unicode_text_export(tmp_path, sources):
+    pol, _ = sources
+    q = tmp_path / "q.tsv"
+    q.write_bytes("ID\tQuestion\nQ7\tAre backups tested?\n".encode("utf-16"))
+    _, rep = run_json(mod, [str(q), "--policies", str(pol), "--json"])
+    assert by_id(rep)["Q7"]["question"] == "Are backups tested?"
+
+
+def test_repeated_ids_never_collide_with_ids_in_the_file(tmp_path, sources):
+    pol, _ = sources
+    q = questionnaire(tmp_path, [["1", "Do you use MFA?", ""], ["1", "Are backups tested?", ""], ["1-2", "Do you log access?", ""]])
+    _, rep = run_json(mod, [str(q), "--policies", str(pol), "--json"])
+    assert [a["id"] for a in rep["answers"]] == ["1", "1-2", "1-2-2"]
+    assert len({a["id"] for a in rep["answers"]}) == 3
+
+
+def test_manifest_paths_outside_the_pack_are_not_cited(tmp_path, sources):
+    pol, pack = sources
+    outside = tmp_path / "secret-mfa-notes.json"
+    outside.write_text("{}", encoding="utf-8")
+    doc = json.loads((pack / "manifest.json").read_text(encoding="utf-8"))
+    doc["files"].append({"path": "../../secret-mfa-notes.json", "command": "mfa conditional-access", "sha256": ""})
+    (pack / "manifest.json").write_text(json.dumps(doc), encoding="utf-8")
+    q = questionnaire(tmp_path, [["1", "Do you enforce MFA through conditional access?", ""]])
+    _, rep = run_json(mod, [str(q), "--evidence", str(pack), "--json"])
+    assert any("outside the pack" in n for n in rep["notes"])
+    assert not any("secret-mfa-notes" in c for c in json.dumps(rep["answers"]).split('"'))
+
+
+def test_hidden_files_in_a_plain_folder_are_not_evidence(tmp_path):
+    ev = tmp_path / "ev"
+    (ev / ".git").mkdir(parents=True)
+    (ev / ".git" / "mfa-config").write_text("x", encoding="utf-8")
+    (ev / ".DS_Store").write_text("x", encoding="utf-8")
+    (ev / "mfa-policy-export.json").write_text("{}", encoding="utf-8")
+    q = questionnaire(tmp_path, [["1", "Do you enforce MFA?", ""]])
+    _, rep = run_json(mod, [str(q), "--evidence", str(ev), "--json"])
+    assert rep["sources"]["evidence_files"] == 1
+
+
+def test_undecodable_questionnaire_exits_2(tmp_path, sources):
+    pol, _ = sources
+    q = tmp_path / "q.csv"
+    q.write_bytes(b"ID,Question\n1,\x81\x8d\x8f\x90\x9d?\n")  # bytes Windows-1252 leaves undefined
+    rc, _, err = run_main(mod, [str(q), "--policies", str(pol)])
+    assert rc == 2 and "Windows-1252" in err
+
+
+def test_fixture_questionnaire_from_the_skill_try_it_line():
+    from conftest import FIXTURES
+
+    d = FIXTURES / "questionnaire"
+    rc, rep = run_json(mod, [str(d / "questionnaire.csv"), "--policies", str(d / "policies"), "--json"])
+    states = {a["id"]: a["state"] for a in rep["answers"]}
+    assert rc == 1 and states["Q1"] == "supported" and states["Q2"] == "supported" and states["Q4"] == "not assessable"

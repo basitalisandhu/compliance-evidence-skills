@@ -1,0 +1,5 @@
+ID,Question,Answer
+Q1,Do you enforce multi-factor authentication for all staff?,
+Q2,Are changes to production code reviewed before release?,
+Q3,Do you keep audit logs of administrator activity?,
+Q4,Do you carry cyber insurance?,
