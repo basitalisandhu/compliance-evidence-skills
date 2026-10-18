@@ -4,6 +4,27 @@ All notable changes to this project are documented here. The format follows Keep
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-18
+
+### Added
+
+- `control-map-from-exports`: the report lists every `evidence` pattern in the map that matched no pack file (`unmatched_patterns` in the JSON, a "Map patterns that matched no pack file" section in Markdown), so a misspelt pattern no longer looks the same as a missing export (closes #5).
+- `essential-eight-evidence-map`: `references/example-e8-map.csv`, a three-row example to copy from, and a "try it" run on the repository's fixture exports.
+- `security-questionnaire-drafter`: reads semicolon and tab separated questionnaires, Excel "Unicode Text" (UTF-16) and Windows-1252 CSV, as spreadsheet programs save them; a fixture questionnaire and policy folder for a first run.
+- Every SKILL.md has a "try it" command on the repository's fixtures and says where the script is when the skill folder is copied without the plugin system (closes #18).
+
+### Fixed
+
+- `maester-control-map`: the example map and the docs assumed an `MFA` tag and `MS.AAD.3.*` test ids. Checked against the Maester repository (2.3.0 and the 3.0 previews): Maester has never had an `MFA` tag, its CISA SCuBA tests are `CISA.MS.AAD.*`, and Maester 3 no longer writes its old tags into result rows. The example map now matches by test id only (`MT.1006` for MFA on administrators, `CIS.M365.1.1.*`, `EIDSCA.*`, `CISA.MS.AAD.3.*`), the fixture results use real ids and tags, and a test keeps the example to real id patterns.
+- `security-questionnaire-drafter`: a manifest entry pointing outside the pack (`..` or an absolute path) was read and could be cited; it is now skipped with a note. In a plain evidence folder, hidden files such as `.DS_Store` and `.git` contents were cited as evidence. A repeated question id could be renamed to an id the file already used.
+- `essential-eight-evidence-map`: requirement ids in lower case, `./` and `\` in evidence paths made rows fail as unknown or not in the manifest; they are normalised. A manifest path outside the pack now stops the run, a JSON map value that is not a path or list of paths exits 2 instead of a traceback, a CSV row without evidence names its line, and with `--max-age-days` a file collected after `--as-of` is not assessable.
+- `auditor-narrative-drafter`: a control map entry without `id`, `state` or `topic`, or a citation without `file` or `field`, crashed with a traceback; an empty map drafted nothing silently; an unwritable `--out` crashed. All exit 2 now. Control ids are matched without regard to case and a repeated `--control` is drafted once.
+
+### Changed
+
+- `control-map-from-exports` and `essential-eight-evidence-map` descriptions say they are not an access review pack or a tenant baseline, so prompts for `access-review-pack` and `entra-posture-review` do not land here.
+- Version 0.5.0 in the marketplace, plugin manifest, `pyproject.toml`, the CLI, the evidence pack tool string and the container examples.
+
 ## [0.4.0] - 2026-10-16
 
 ### Added

@@ -218,3 +218,29 @@ def test_bad_maps_are_rejected(tmp_path, write, bad, message):
     pk = _mini_pack(tmp_path, {"a.json": {"f": 1}})
     rc, _, err = run_main(mod, [str(pk), "--framework", "iso27001", "--map", str(write("bad.yaml", bad))])
     assert rc == 2 and message in err
+
+
+def test_misspelt_evidence_pattern_is_listed(tmp_path, write):
+    pk = _mini_pack(tmp_path, {"aws/password-policy.json": {"PasswordPolicy": {"MinimumPasswordLength": 16}}})
+    m = write(
+        "m.yaml",
+        "controls:\n  iso27001: {A.5.17: \"Secrets handled with care\"}\nchecks:\n"
+        "  - id: pw\n    iso27001: [A.5.17]\n    evidence: aws/pasword-policy.json\n"
+        "    field: PasswordPolicy.MinimumPasswordLength\n    expect: {gte: 14}\n"
+        "  - id: pw-ok\n    iso27001: [A.5.17]\n    any_of:\n"
+        "      - {evidence: aws/password-policy.json, field: PasswordPolicy.MinimumPasswordLength, expect: {gte: 14}}\n"
+        "      - {evidence: m365/password-*.json, field: x, expect: {exists: true}}\n",
+    )
+    _, out = run_json(mod, [str(pk), "--framework", "iso27001", "--map", str(m), "--json"])
+    assert out["unmatched_patterns"] == [
+        {"check": "pw", "pattern": "aws/pasword-policy.json"},
+        {"check": "pw-ok", "pattern": "m365/password-*.json"},
+    ]
+    _, md, _ = run_main(mod, [str(pk), "--framework", "iso27001", "--map", str(m)])
+    assert "## Map patterns that matched no pack file" in md and "`aws/pasword-policy.json` (check pw)" in md
+
+
+def test_starter_map_lists_its_unmatched_patterns(pack):
+    _, out = cmap(pack)
+    assert all(set(u) == {"check", "pattern"} for u in out["unmatched_patterns"])
+    assert not any(u["pattern"] == "m365/conditional-access-policies.json" for u in out["unmatched_patterns"])

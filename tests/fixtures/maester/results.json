@@ -116,8 +116,7 @@
       "Severity": "High",
       "Tag": [
         "EIDSCA",
-        "Security",
-        "MFA"
+        "EIDSCA.AF01"
       ],
       "Result": "Passed",
       "Block": "Example block",
@@ -156,14 +155,17 @@
     },
     {
       "Index": 7,
-      "Id": "MS.AAD.3.1",
+      "Id": "CISA.MS.AAD.3.1",
       "Title": "Phishing-resistant MFA is required for all users",
-      "Name": "MS.AAD.3.1: Phishing-resistant MFA is required for all users",
-      "HelpUrl": "https://maester.dev/docs/tests/MS.AAD.3.1",
+      "Name": "CISA.MS.AAD.3.1: Phishing-resistant MFA is required for all users",
+      "HelpUrl": "https://maester.dev/docs/tests/CISA.MS.AAD.3.1",
       "Severity": "High",
       "Tag": [
+        "MS.AAD",
+        "MS.AAD.3.1",
+        "CISA.MS.AAD.3.1",
         "CISA",
-        "MFA"
+        "Entra ID P1"
       ],
       "Result": "NotRun",
       "Block": "Example block",
@@ -200,19 +202,19 @@
     {
       "Index": 9,
       "Id": "MT.1006",
-      "Title": "Administrators are required to use MFA",
-      "Name": "MT.1006: Administrators are required to use MFA",
+      "Title": "At least one Conditional Access policy is configured to require MFA for admins",
+      "Name": "MT.1006: At least one Conditional Access policy is configured to require MFA for admins",
       "HelpUrl": "https://maester.dev/docs/tests/MT.1006",
       "Severity": "Critical",
       "Tag": [
         "Maester",
-        "MFA"
+        "CA"
       ],
       "Result": "Passed",
       "Block": "Example block",
       "Duration": "00:00:00.120",
       "ResultDetail": {
-        "TestTitle": "Administrators are required to use MFA",
+        "TestTitle": "At least one Conditional Access policy is configured to require MFA for admins",
         "TestResult": "Synthetic result for tests. Contact it-admin@example.com.",
         "TestSkipped": "",
         "SkippedReason": "",

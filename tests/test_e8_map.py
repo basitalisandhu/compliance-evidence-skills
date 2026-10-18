@@ -184,3 +184,56 @@ def test_pack_without_manifest_exits_2_and_help(tmp_path):
     assert rc == 2 and "no manifest.json" in err
     rc, out, _ = run_main(mod, ["--help"])
     assert rc == 0 and "November 2023" in out and "Exit codes" in out and "--redact" in out and "not assessable" in out
+
+
+def test_lower_case_ids_dot_slash_and_backslash_paths(tmp_path, pack):
+    m = write_map(tmp_path, [["rb-ml1-*", "./aws/backup-plans.json", "", ""], ["MFA-ML1-01", "m365\\conditional-access-mfa.json", "", ""]])
+    _, rep = run_json(mod, [str(pack), "--map", str(m), *BASE])
+    assert req(rep, "RB-ML1-01")["citations"] == ["[evidence: aws/backup-plans.json]"]
+    assert req(rep, "MFA-ML1-01")["state"] == "supported"
+
+
+def test_manifest_path_outside_the_pack_is_bad_input(tmp_path, pack):
+    doc = json.loads((pack / "manifest.json").read_text(encoding="utf-8"))
+    doc["files"].append({"path": "../outside.json", "sha256": ""})
+    (pack / "manifest.json").write_text(json.dumps(doc), encoding="utf-8")
+    rc, _, err = run_main(mod, [str(pack), *BASE])
+    assert rc == 2 and "points outside the pack" in err
+
+
+def test_json_map_with_a_non_path_value_is_bad_input(tmp_path, pack):
+    m = tmp_path / "map.json"
+    m.write_text(json.dumps({"RB-ML1-01": 5}), encoding="utf-8")
+    rc, _, err = run_main(mod, [str(pack), "--map", str(m), *BASE])
+    assert rc == 2 and "must map to a path or a list of paths" in err
+
+
+def test_csv_row_without_evidence_names_its_line(tmp_path, pack):
+    m = write_map(tmp_path, [["RB-ML1-01", "aws/backup-plans.json", "", ""], ["RB-ML1-02", "", "", ""]])
+    rc, _, err = run_main(mod, [str(pack), "--map", str(m), *BASE])
+    assert rc == 2 and "line 3" in err
+
+
+def test_evidence_collected_after_as_of_is_not_assessable_with_max_age(tmp_path):
+    p = make_pack(tmp_path, {"aws/backup-plans.json": ("{}", "2026-11-20T00:00:00Z")})
+    m = write_map(tmp_path, [["RB-ML1-01", "aws/backup-plans.json", "", ""]])
+    _, rep = run_json(mod, [str(p), "--map", str(m), "--max-age-days", "90", *BASE])
+    r = req(rep, "RB-ML1-01")
+    assert r["state"] == "not assessable" and "after --as-of 2026-10-05" in r["gaps"][0]
+    _, rep = run_json(mod, [str(p), "--map", str(m), *BASE])  # without an age limit the date is not judged
+    assert req(rep, "RB-ML1-01")["state"] == "supported"
+
+
+def test_bundled_example_map_on_the_fixture_exports(tmp_path):
+    # the "try it" command in SKILL.md: pack tests/fixtures/exports, then map it with references/example-e8-map.csv
+    from conftest import FIXTURES
+
+    pk = load_script("evidence-pack-builder", "evidence_pack.py")
+    rc, _, err = run_main(pk, ["build", str(FIXTURES / "exports"), "--out", str(tmp_path / "pack")])
+    assert rc == 0, err
+    example = SKILLS / "essential-eight-evidence-map" / "references" / "example-e8-map.csv"
+    rc, rep = run_json(mod, [str(tmp_path / "pack"), "--map", str(example), *BASE])
+    assert rc == 1
+    assert sorted(r["id"] for r in rep["requirements"] if r["state"] == "supported") == ["MFA-ML1-01", "RB-ML1-01", "RB-ML1-03"]
+    rows = list(csv.DictReader(example.read_text(encoding="utf-8").splitlines()))
+    assert all(r["note"].startswith("EXAMPLE to review") for r in rows)
