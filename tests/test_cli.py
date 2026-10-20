@@ -59,6 +59,15 @@ def test_new_subcommands_for_0_4_0_are_registered():
     assert result.returncode == 1 and "| iso27001 | A.8.2 |" in result.stdout
 
 
+def test_plan_subcommand_is_registered_and_runs_through_the_dispatcher():
+    cli = load_cli()
+    assert cli.script_path("plan").name == "collection_plan.py"
+    fixtures = "tests/fixtures/collection-plan"
+    args = ["--scope", f"{fixtures}/scope-iso27001.json", "--manifest", f"{fixtures}/manifest.json", "--as-of", "2026-11-15", "--format", "csv"]
+    result = run("plan", *args)
+    assert result.returncode == 1 and result.stdout.startswith("request_id,title,controls,")
+
+
 def test_help_subcommand_shows_the_script_help():
     result = run("help", "pack")
     assert result.returncode == 0

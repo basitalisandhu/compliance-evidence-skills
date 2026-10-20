@@ -1,0 +1,18 @@
+{
+  "schema": "compliance-evidence-pack/1",
+  "tool": "evidence_pack.py",
+  "built_at": "2026-11-14T00:00:00Z",
+  "collector": "jane.doe@example.com",
+  "scope": "Example Pty Ltd",
+  "period": {
+    "start": "2026-07-01",
+    "end": "2026-12-31"
+  },
+  "file_count": 11,
+  "files": [
+    {
+      "path": "aws/credential-report.csv",
+      "source_system": "aws"
+    }
+  ]
+}
