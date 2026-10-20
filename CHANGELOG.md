@@ -4,6 +4,17 @@ All notable changes to this project are documented here. The format follows Keep
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-20
+
+### Added
+
+- `evidence-collection-plan`: `collection_plan.py` answers "what evidence do we need to collect for each control, from which system, how, how often and by when?" before collection starts, as an auditor-style PBC request list, and on later runs shows which requests an evidence pack already meets. Input is a scope file (framework `iso27001-2022` or `soc2`, audit period, in-scope control identifiers, system inventory with an owner role each), an optional extra or overriding catalogue (`--catalogue`) and an optional pack `manifest.json` (`--manifest`, matched to requests by `request_id` or filename pattern). The bundled catalogue (`references/request-catalogue.json`) holds 33 starter requests for common ISO 27001:2022 Annex A and SOC 2 identifiers, each with the system, a read-only way to obtain it, frequency (`once-per-period`, `quarterly`, `monthly`, `population-sample`), freshness window, default owner role and the skill that consumes the file; control identifiers carry short paraphrases only. Quarterly and monthly requests get one row per slot with a due date; each row is `met`, `stale`, `missing` or `overdue` on `--as-of` and a control takes the worst status of its rows. Requests for a system outside the inventory are listed as not applicable unless the system is added, and controls no request covers are listed as gaps. Markdown, JSON or CSV (the PBC spreadsheet), `--out`, `--redact`. Exit 0 every control covered and nothing stale or overdue, 1 otherwise, 2 bad input. 34 tests with synthetic scope, manifest and catalogue files and a golden report. Motivated by getprobo/probo#1981, getprobo/probo#1728 and trycompai/comp#3541.
+- Dispatcher subcommand `plan`; the container check in CI runs its `--help`.
+
+### Changed
+
+- Version 0.6.0 in `pyproject.toml`, `plugin.json`, `marketplace.json`, the dispatcher, the pack builder's tool string and the README container examples; the READMEs, plugin and marketplace descriptions list ten skills and a sample output section for the new one.
+
 ## [0.5.0] - 2026-10-18
 
 ### Added

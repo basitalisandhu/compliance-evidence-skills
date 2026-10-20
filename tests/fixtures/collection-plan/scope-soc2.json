@@ -1,0 +1,39 @@
+{
+  "organisation": "Example Pty Ltd",
+  "framework": "soc2",
+  "period": {
+    "start": "2026-01-01",
+    "end": "2026-12-31"
+  },
+  "controls": [
+    "CC1.2",
+    "CC6.1",
+    "CC6.2",
+    "CC7.2",
+    "CC8.1",
+    "CC9.2",
+    "A1.2"
+  ],
+  "systems": [
+    {
+      "kind": "aws",
+      "owner": "Cloud platform lead"
+    },
+    {
+      "kind": "entra",
+      "owner": "Identity administrator"
+    },
+    {
+      "kind": "github",
+      "owner": "Engineering lead"
+    },
+    {
+      "kind": "hr-system",
+      "owner": "People operations lead"
+    },
+    {
+      "kind": "ticketing",
+      "owner": "Engineering lead"
+    }
+  ]
+}

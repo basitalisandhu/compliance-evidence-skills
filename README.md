@@ -1,12 +1,12 @@
 # Claude Code skills for compliance evidence
 
-**Compliance evidence skills for Claude Code: build integrity-checked evidence packs from GitHub, AWS and Microsoft 365 exports, map them to ISO 27001 and SOC 2 control identifiers and the Essential Eight maturity levels, digest vendor SOC 2 reports and certificates, map Maester results to controls, and draft auditor narratives and security questionnaire answers that cite evidence or say not assessable.**
+**Compliance evidence skills for Claude Code: build integrity-checked evidence packs from GitHub, AWS and Microsoft 365 exports, map them to ISO 27001 and SOC 2 control identifiers and the Essential Eight maturity levels, digest vendor SOC 2 reports and certificates, map Maester results to controls, plan which evidence to collect per control and track what is stale or overdue, and draft auditor narratives and security questionnaire answers that cite evidence or say not assessable.**
 
-compliance-evidence-skills is a Claude Code plugin marketplace with one plugin, `compliance-evidence`, holding nine skills. Each skill is a fixed procedure plus a tested Python script (standard library only). The skills tell Claude which read-only exports to take and which permission each needs; the scripts then work on the saved files: hash them into a pack with a manifest, map them to control identifiers, and draft narratives in which every evidence statement cites a file and field.
+compliance-evidence-skills is a Claude Code plugin marketplace with one plugin, `compliance-evidence`, holding ten skills. Each skill is a fixed procedure plus a tested Python script (standard library only). The skills tell Claude which read-only exports to take and which permission each needs; the scripts then work on the saved files: hash them into a pack with a manifest, map them to control identifiers, and draft narratives in which every evidence statement cites a file and field.
 
 It is written for the people who prepare an ISO 27001 or SOC 2 assessment in a small or mid-sized organisation: engineers and IT administrators who own GitHub, AWS and Microsoft 365, and the security or compliance lead who has to hand evidence to an assessor. It exists because evidence is still mostly screenshots and loose exports with no record of who took them, when, or with which command, and because tools that turn an API error into a control failure (or a missing file into a pass) cost hours of argument during fieldwork. These skills keep three result states only, `supported`, `contradicted` and `not assessable`, and never mark a control supported without a cited evidence file and field.
 
-Common searches it answers: SOC 2 Type II evidence from GitHub and AWS, an ISO 27001 or SOC 2 readiness assessment, packing a Vanta or Drata export with a hash manifest for the assessor, answering a customer security questionnaire from evidence ("fill in this security questionnaire" without inventing answers), an Essential Eight maturity self-assessment from evidence ("what Essential Eight maturity level can we claim?"), vendor SOC 2 report and bridge letter tracking ("which vendor SOC 2 reports are out of date?"), and an ISO 27001 control column for Maester test results.
+Common searches it answers: SOC 2 Type II evidence from GitHub and AWS, an ISO 27001 or SOC 2 readiness assessment, packing a Vanta or Drata export with a hash manifest for the assessor, answering a customer security questionnaire from evidence ("fill in this security questionnaire" without inventing answers), an Essential Eight maturity self-assessment from evidence ("what Essential Eight maturity level can we claim?"), vendor SOC 2 report and bridge letter tracking ("which vendor SOC 2 reports are out of date?"), an ISO 27001 control column for Maester test results, and a PBC evidence request list ("what evidence do we need for this audit?") that shows which items are stale or overdue.
 
 No network access from the scripts, no telemetry. All inputs are exports already on disk.
 
@@ -44,6 +44,8 @@ python3 plugins/compliance-evidence/skills/security-questionnaire-drafter/script
   --policies tests/fixtures/questionnaire/policies --evidence /tmp/pack
 python3 plugins/compliance-evidence/skills/maester-control-map/scripts/maester_map.py tests/fixtures/maester/results.json \
   --map plugins/compliance-evidence/skills/maester-control-map/references/example-map.csv --as-of 2026-10-16
+python3 plugins/compliance-evidence/skills/evidence-collection-plan/scripts/collection_plan.py --scope tests/fixtures/collection-plan/scope-iso27001.json \
+  --manifest tests/fixtures/collection-plan/manifest.json --as-of 2026-11-15
 ```
 
 Every SKILL.md has the same "try it" command for its skill next to the real one.
@@ -66,10 +68,10 @@ This pack is also part of [claude-skills](https://github.com/basitalisandhu/clau
 The scripts are also published as one container image on GitHub Packages (linux/amd64 and linux/arm64) when a version is tagged. The entrypoint is `compliance-evidence <subcommand> [args]`; mount the files at `/work`, the working directory:
 
 ```bash
-docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.5.0 pack build evidence-2026-q3 --out pack-2026-q3
-docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.5.0 map pack-2026-q3 --framework soc2 \
+docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.6.0 pack build evidence-2026-q3 --out pack-2026-q3
+docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.6.0 map pack-2026-q3 --framework soc2 \
   --map /app/plugins/compliance-evidence/skills/control-map-from-exports/references/starter-map.yaml
-docker run --rm ghcr.io/basitalisandhu/compliance-evidence-skills:0.5.0 --help
+docker run --rm ghcr.io/basitalisandhu/compliance-evidence-skills:0.6.0 --help
 ```
 
 | Subcommand | Script (skill) |
@@ -84,14 +86,15 @@ docker run --rm ghcr.io/basitalisandhu/compliance-evidence-skills:0.5.0 --help
 | `e8` | `e8_map.py` (essential-eight-evidence-map) |
 | `vendors` | `vendor_attestations.py` (vendor-attestation-digest) |
 | `maester` | `maester_map.py` (maester-control-map) |
+| `plan` | `collection_plan.py` (evidence-collection-plan) |
 
 Every subcommand passes its arguments to the script unchanged. The image has no pip dependencies and runs as uid 1000; on Linux add `--user "$(id -u):$(id -g)"` if the mounted folder is not writable by that uid. From a checkout, `python3 scripts/cli.py` is the same dispatcher. Released images are signed with cosign (keyless) and carry a build provenance attestation and an SPDX SBOM:
 
 ```bash
-cosign verify ghcr.io/basitalisandhu/compliance-evidence-skills:0.5.0 \
+cosign verify ghcr.io/basitalisandhu/compliance-evidence-skills:0.6.0 \
   --certificate-identity-regexp '^https://github.com/basitalisandhu/compliance-evidence-skills/' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com
-gh attestation verify oci://ghcr.io/basitalisandhu/compliance-evidence-skills:0.5.0 --owner basitalisandhu
+gh attestation verify oci://ghcr.io/basitalisandhu/compliance-evidence-skills:0.6.0 --owner basitalisandhu
 ```
 
 ## When to use this
@@ -105,6 +108,7 @@ gh attestation verify oci://ghcr.io/basitalisandhu/compliance-evidence-skills:0.
 - Which Essential Eight requirements your evidence covers at ML1 to ML3, and the level each strategy can claim today: `essential-eight-evidence-map`
 - Which vendor SOC 2 reports, ISO 27001 certificates and bridge letters are expired, expiring, qualified or out of scope, and what each vendor owner has to chase: `vendor-attestation-digest`
 - Which ISO 27001 or SOC 2 controls a Maester run of Microsoft 365 tests supports or contradicts, with a control column on every test: `maester-control-map`
+- What evidence to collect for each control before the audit period starts, from which system, how, how often and by when, and later which items are stale or overdue: `evidence-collection-plan`
 
 ## Skills
 
@@ -119,6 +123,7 @@ gh attestation verify oci://ghcr.io/basitalisandhu/compliance-evidence-skills:0.
 | `essential-eight-evidence-map` | "what Essential Eight maturity level can we claim?", preparing for an Essential Eight assessment | `e8_map.py`: the 153 requirements of the November 2023 maturity model per strategy and level with a state each, the claimable level per strategy, unusable evidence and mapping candidates |
 | `vendor-attestation-digest` | "which vendor SOC 2 reports are out of date?", supplier reviews, an audit request for vendor assurance | `vendor_attestations.py`: per vendor and document state, 12 finding types (expired, coverage gap without a bridge letter, qualified opinion, exceptions, scope mismatch, unreviewed user entity controls, missing fields), owner actions by criticality, source document hashes |
 | `maester-control-map` | "which ISO 27001 controls do our Maester results support?", a control column on Maester results | `maester_map.py`: per control state from mapped tests (Skipped, NotRun, Error and Investigate never count as support), the test list as CSV with control columns, unmapped tests and unmatched map rows, the run's hash and a stale warning |
+| `evidence-collection-plan` | "what evidence do we need for this audit?", building the PBC list, chasing stale or overdue evidence | `collection_plan.py`: about 30 starter evidence requests selected by in-scope control, one row per quarter or month with owner, read-only way to obtain it and due date; against a pack manifest each row is met, stale, missing or overdue and each control takes its worst row; Markdown, JSON or the PBC list as CSV |
 
 ## Sample output: vendor attestations and Maester results
 
@@ -169,6 +174,53 @@ Freshness: run is 6 days old on 2026-10-16.
 
 Both exit 1: the digest has findings for owners, and A.8.2 is contradicted by a failed test.
 
+## Sample output: evidence collection plan
+
+From a checkout, on the synthetic fixtures (trimmed):
+
+```bash
+python3 plugins/compliance-evidence/skills/evidence-collection-plan/scripts/collection_plan.py --scope tests/fixtures/collection-plan/scope-iso27001.json \
+  --manifest tests/fixtures/collection-plan/manifest.json --as-of 2026-11-15
+```
+
+```text
+Framework iso27001-2022, audit period 2026-07-01 to 2026-12-31, evaluated as of 2026-11-15. Evidence statuses come from the manifest.
+
+8 controls in scope: 1 met, 4 missing, 1 stale, 1 overdue, 1 without an applicable request.
+17 requests selected, 19 request rows: 8 met, 9 missing, 1 stale, 1 overdue. 3 requests are not applicable unless their system is added.
+
+### Controls
+
+| Control | Topic (paraphrase) | Status | Requests |
+|---|---|---|---|
+| A.5.1 | Security policies exist, are approved and reach the people they apply to | missing | HR-03, POL-01 |
+| A.5.18 | Access is granted, reviewed and removed on purpose | overdue | ACC-01, ACC-02, IAM-01, IDP-03 |
+| A.6.3 | People receive security awareness training | stale | HR-02 |
+| A.7.4 |  | gap: no request in the catalogue | none |
+| A.8.5 | Sign-in uses strong methods such as multi-factor authentication | missing | IAM-01, IAM-02, IDP-01, IDP-02 |
+| A.8.13 | Copies of data and systems exist and restoring them is tried | missing | BKP-01 |
+| A.8.15 | Systems keep a tamper-resistant record of who did what | met | LOG-01 |
+| A.8.32 | Changes go through a reviewed, recorded process | missing | CHG-01, CHG-02 |
+
+| Request | Slot | Due | Item | Controls | System | Owner | Status | Evidence file | Collected |
+|---|---|---|---|---|---|---|---|---|---|
+| ACC-01 | Q1 | 2026-09-30 | Access review sign-off for in-scope systems | A.5.18 | entra | Identity administrator | overdue |  |  |
+| CHG-01 | Q1 | 2026-09-30 | GitHub branch protection or rulesets on the release branch | A.8.32 | github | Engineering lead | met | github/branch-protection.json | 2026-07-14 |
+| IAM-01 | Q1 | 2026-09-30 | AWS IAM credential report | A.5.18 A.8.5 | aws | Cloud platform lead | met | aws/credential-report.csv | 2026-07-20 |
+| IDP-01 | Q1 | 2026-09-30 | Entra Conditional Access policies export | A.8.5 | entra | Identity administrator | met | m365/conditional-access-policies.json | 2026-09-12 |
+| IDP-03 | Q1 | 2026-09-30 | Entra privileged role assignments | A.5.18 | entra | Identity administrator | met | m365/privileged-roles-2026-07.json | 2026-07-08 |
+| ACC-01 | Q2 | 2026-12-31 | Access review sign-off for in-scope systems | A.5.18 | entra | Identity administrator | missing |  |  |
+...
+| HR-02 | period | 2026-12-31 | Security awareness training completion report | A.6.3 | hr-system | People operations lead | stale | hr/training-completion.csv | 2026-07-05 |
+...
+### Gaps
+
+- A.7.4: no request in the catalogue.
+
+```
+
+Exit 1: the training report is stale, an access review is overdue and A.7.4 has no request in the starter catalogue. The catalogue is a starting set, not a complete audit programme; the assessor decides what is sufficient.
+
 ## Result states
 
 - `supported`: every mapped check passed on files whose hashes match the manifest, and the result cites at least one file and field.
@@ -190,6 +242,7 @@ Covered:
 - The ASD Essential Eight Maturity Model (November 2023): all 153 requirement statements per strategy and level (CC BY 4.0), with the level each strategy can claim from the evidence you map. The script checks that mapped files are present, unchanged and recent; it does not read their content.
 - Vendor assurance documents (SOC 2 Type 1 and Type 2 reports, ISO 27001 certificates, bridge letters, penetration test summaries) through a register whose fields you take from each document with the page number. The script does not read PDFs.
 - Maester results files (`Invoke-Maester -OutputJsonFile`), mapped to identifiers through a CSV you own; an example map to review is included.
+- Evidence collection planning: about 30 starter requests for common ISO/IEC 27001:2022 Annex A and SOC 2 identifiers (identifiers and short paraphrases only), matched to a pack manifest by request id or filename pattern. The script reads no file contents.
 
 Not covered:
 

@@ -15,7 +15,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 
 PROG = "compliance-evidence"
 ROOT = Path(__file__).resolve().parents[1]
@@ -72,6 +72,11 @@ COMMANDS: dict[str, tuple[str, str, str]] = {
         "maester-control-map",
         "maester_map.py",
         "Map Maester test results to ISO 27001 or SOC 2 identifiers with a mapping file",
+    ),
+    "plan": (
+        "evidence-collection-plan",
+        "collection_plan.py",
+        "Plan the evidence to collect per control (PBC list) and show what a pack leaves stale, missing or overdue",
     ),
 }
 

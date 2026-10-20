@@ -1,0 +1,91 @@
+{
+  "schema": "compliance-evidence-pack/1",
+  "tool": "evidence_pack.py",
+  "built_at": "2026-11-14T00:00:00Z",
+  "collector": "jane.doe@example.com",
+  "scope": "Example Pty Ltd",
+  "period": {
+    "start": "2026-07-01",
+    "end": "2026-12-31"
+  },
+  "file_count": 11,
+  "files": [
+    {
+      "path": "aws/credential-report.csv",
+      "source_system": "aws",
+      "command": "aws iam get-credential-report",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-07-20T09:30:00Z"
+    },
+    {
+      "path": "aws/password-policy.json",
+      "source_system": "aws",
+      "command": "aws iam get-account-password-policy --output json",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-30T09:30:00Z"
+    },
+    {
+      "path": "aws/account-summary.json",
+      "source_system": "aws",
+      "command": "aws iam get-account-summary --output json",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-10-30T09:30:00Z"
+    },
+    {
+      "path": "aws/cloudtrail-trails.json",
+      "source_system": "aws",
+      "command": "aws cloudtrail describe-trails --output json",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-09-10T09:30:00Z"
+    },
+    {
+      "path": "m365/conditional-access-policies.json",
+      "source_system": "entra",
+      "command": "saved export",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-09-12T09:30:00Z"
+    },
+    {
+      "path": "m365/privileged-roles-2026-07.json",
+      "source_system": "entra",
+      "command": "saved export",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-07-08T09:30:00Z"
+    },
+    {
+      "path": "hr/training-completion.csv",
+      "source_system": "hr-system",
+      "command": "saved export",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-07-05T09:30:00Z"
+    },
+    {
+      "path": "hr/leavers-2026-h2.csv",
+      "source_system": "hr-system",
+      "command": "saved export",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-11-02T09:30:00Z"
+    },
+    {
+      "path": "github/branch-protection.json",
+      "source_system": "github",
+      "command": "gh api repos/example-org/payments-api/branches/main/protection",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-07-14T09:30:00Z"
+    },
+    {
+      "path": "documents/policies/information-security-policy.pdf",
+      "source_system": "document",
+      "command": "saved export",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-08-01T09:30:00Z"
+    },
+    {
+      "path": "notes/readme.txt",
+      "source_system": "document",
+      "command": "saved export",
+      "collector": "jane.doe@example.com",
+      "collected_at": "2026-07-01T09:30:00Z"
+    }
+  ]
+}

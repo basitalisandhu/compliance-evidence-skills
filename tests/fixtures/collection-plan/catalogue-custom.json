@@ -1,0 +1,56 @@
+{
+  "schema": "evidence-collection-catalogue/1",
+  "control_topics": {
+    "A.7.4": "Premises are watched for unauthorised physical access"
+  },
+  "requests": [
+    {
+      "id": "PHY-01",
+      "title": "Visitor log and CCTV retention settings",
+      "controls": {
+        "iso27001-2022": [
+          "A.7.4"
+        ]
+      },
+      "system": "document",
+      "how": "Export the visitor log for the period and the screenshot of the CCTV retention setting from the vendor console",
+      "frequency": "quarterly",
+      "freshness_days": 100,
+      "owner_role": "Office manager",
+      "consumers": [
+        "evidence-pack-builder"
+      ],
+      "match": {
+        "path_glob": [
+          "documents/visitor-log*"
+        ]
+      }
+    },
+    {
+      "id": "IAM-02",
+      "title": "Password policy export (override)",
+      "controls": {
+        "iso27001-2022": [
+          "A.5.17",
+          "A.8.5"
+        ],
+        "soc2": [
+          "CC6.1"
+        ]
+      },
+      "system": "aws",
+      "how": "aws iam get-account-password-policy --output json",
+      "frequency": "monthly",
+      "freshness_days": 35,
+      "owner_role": "Cloud platform lead",
+      "consumers": [
+        "aws-identity-and-logging-evidence"
+      ],
+      "match": {
+        "path_glob": [
+          "aws/password-policy*"
+        ]
+      }
+    }
+  ]
+}
