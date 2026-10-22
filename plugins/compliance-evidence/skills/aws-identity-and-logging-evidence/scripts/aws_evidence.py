@@ -21,7 +21,7 @@ Regional files, directly in the folder (one region) or in regions/<region>/ (sev
 Rows (check id, ISO/IEC 27001:2022 Annex A identifiers, SOC 2 identifiers):
   AWS-CT-MULTI-REGION   A.8.15        CC7.2       a multi-region CloudTrail trail exists
   AWS-CT-VALIDATION     A.8.15        CC7.2       a multi-region trail has log file validation on
-  AWS-CT-LOGGING        A.8.15        CC7.2       every multi-region trail's status says it is logging
+  AWS-CT-LOGGING        A.8.15        CC7.2       every multi-region trail is logging and delivered within max_delivery_age_hours
   AWS-ROOT-MFA          A.8.5 A.8.2   CC6.1       the root user has MFA
   AWS-ROOT-ACCESS-KEYS  A.8.2         CC6.1       the root user has no access keys
   AWS-CONSOLE-MFA       A.8.5         CC6.1       every IAM user with a console password has MFA
@@ -36,6 +36,7 @@ Rows (check id, ISO/IEC 27001:2022 Annex A identifiers, SOC 2 identifiers):
 
 Config (YAML or JSON, optional; defaults shown):
   max_key_age_days: 90
+  max_delivery_age_hours: 24
   min_password_length: 14
   regions: [us-east-1, eu-west-1]   regions in scope; a listed region with no exported folder is a gap
 
@@ -48,6 +49,7 @@ from __future__ import annotations
 import argparse
 import csv
 import io
+import math
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -70,13 +72,14 @@ from _evidence import (  # noqa: E402
     fail_exit,
     load_config,
     load_json,
+    parse_dt,
     redact,
     render_rows,
     state_counts,
     worst_state,
 )
 
-CONFIG_KEYS = {"max_key_age_days", "min_password_length", "regions"}
+CONFIG_KEYS = {"max_key_age_days", "max_delivery_age_hours", "min_password_length", "regions"}
 CTRL = {
     "AWS-CT-MULTI-REGION": {"iso27001": ["A.8.15"], "soc2": ["CC7.2"]},
     "AWS-CT-VALIDATION": {"iso27001": ["A.8.15"], "soc2": ["CC7.2"]},
@@ -159,13 +162,16 @@ def unreadable(folder: Folder, check: str, statement: str, rel: str, status: str
 
 # ---- CloudTrail -------------------------------------------------------------------------------------------------
 
-def cloudtrail_rows(folder: Folder) -> list[dict]:
+def cloudtrail_rows(folder: Folder, cfg: dict, now: datetime) -> list[dict]:
+    max_age = cfg_number(cfg, "max_delivery_age_hours", 24)
+    if not math.isfinite(max_age):
+        raise InputError("config max_delivery_age_hours must be finite")
     rows: list[dict] = []
     status, data, msg = folder.read("cloudtrail-trails.json")
     f = folder.name("cloudtrail-trails.json")
     statements = {"AWS-CT-MULTI-REGION": "A CloudTrail trail records activity in every region",
                   "AWS-CT-VALIDATION": "A multi-region trail has log file integrity validation on",
-                  "AWS-CT-LOGGING": "Every multi-region trail is logging"}
+                  "AWS-CT-LOGGING": f"Every multi-region trail is logging and delivered within {max_age:g} hours of --as-of"}
     if status != "ok":
         return [unreadable(folder, c, s, "cloudtrail-trails.json", status, msg) for c, s in statements.items()]
     trails = [t for t in (data.get("trailList") or []) if isinstance(t, dict)] if isinstance(data, dict) else []
@@ -195,8 +201,20 @@ def cloudtrail_rows(folder: Folder) -> list[dict]:
                         else f"{folder.name(rel)}: no IsLogging field")
             continue
         logging_on = sdata["IsLogging"] is True
-        states.append(SUPPORTED if logging_on else CONTRADICTED)
         cites.append(citation(folder.name(rel), "IsLogging", sdata["IsLogging"]))
+        if not logging_on:
+            states.append(CONTRADICTED)
+            continue
+        delivered = parse_dt(sdata.get("LatestDeliveryTime"))
+        if "LatestDeliveryTime" in sdata:
+            cites.append(citation(folder.name(rel), "LatestDeliveryTime", sdata["LatestDeliveryTime"]))
+        if delivered is None or delivered > now:
+            states.append(NOT_ASSESSABLE)
+            why = "missing or unparseable" if delivered is None else "later than --as-of"
+            gaps.append(f"{folder.name(rel)}: LatestDeliveryTime is {why}")
+            continue
+        age_hours = (now - delivered).total_seconds() / 3600
+        states.append(CONTRADICTED if age_hours > max_age else SUPPORTED)
     rows.append(evidence_row("AWS-CT-LOGGING", CTRL["AWS-CT-LOGGING"], worst_state(states), statements["AWS-CT-LOGGING"], cites, gaps))
     return rows
 
@@ -407,7 +425,7 @@ def _region_row(check: str, s: str, states: list[str], cites: list[dict], gaps: 
 def evaluate(folder_path: str, cfg: dict, now: datetime, prefix: str = "") -> dict:
     folder = Folder(folder_path, prefix)
     people: set[str] = set()
-    rows = cloudtrail_rows(folder) + iam_rows(folder, cfg, now, people) + regional_rows(folder, cfg)
+    rows = cloudtrail_rows(folder, cfg, now) + iam_rows(folder, cfg, now, people) + regional_rows(folder, cfg)
     regions, _ = folder.regions(cfg.get("regions") or [])
     return {"source": "aws", "folder": str(folder.path), "as_of": now.strftime("%Y-%m-%d"),
             "regions": sorted(regions), "summary": state_counts(rows), "rows": rows, "disclaimer": DISCLAIMER,
