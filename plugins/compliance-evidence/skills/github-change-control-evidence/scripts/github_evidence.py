@@ -24,7 +24,7 @@ Rows (check id, ISO/IEC 27001:2022 Annex A identifiers, SOC 2 identifiers):
   GH-ADMINS-INCLUDED     A.8.32 A.8.2  CC8.1  protection applies to administrators
   GH-STATUS-CHECKS       A.8.29 A.8.25 CC8.1  named status checks are required
   GH-FORCE-PUSH-BLOCKED  A.8.32        CC8.1  force pushes are not allowed
-  GH-PR-APPROVED         A.8.32        CC8.1  every merged pull request in the period has an approval from someone
+  GH-PR-APPROVED         A.8.32        CC8.1  every merged pull request in the period has a latest review approving it from someone
                                               other than its author (full population of the export)
   GH-CODEOWNERS          A.8.32        CC8.1  a CODEOWNERS file exists
   GH-SIGNED-COMMITS      A.8.32        CC8.1  the share of verified commit signatures is at least min_signed_ratio
@@ -288,8 +288,22 @@ def pr_rows(folder: Folder, cfg: dict, people: set[str]) -> tuple[list[dict], di
             continue
         author = login(pr.get("author"))
         people.update(x for x in [author, login(pr.get("mergedBy"))] if x)
-        approvers = sorted({login(r.get("author")) for r in pr.get("reviews") or []
-                            if isinstance(r, dict) and r.get("state") == "APPROVED" and login(r.get("author")) != author})
+        by_reviewer: dict[str, list[dict]] = {}
+        for review in pr.get("reviews") or []:
+            if not isinstance(review, dict):
+                continue
+            reviewer = login(review.get("author"))
+            if reviewer:
+                by_reviewer.setdefault(reviewer, []).append(review)
+        people.update(by_reviewer)
+        approvers = []
+        for reviewer, reviews in by_reviewer.items():
+            # Use timestamps when all are parseable, otherwise keep export order.
+            dated = [(parse_dt(r.get("submittedAt")), i, r) for i, r in enumerate(reviews)]
+            latest = max(dated, key=lambda item: (item[0], item[1]))[2] if all(t for t, _, _ in dated) else reviews[-1]
+            if reviewer != author and latest.get("state") == "APPROVED":
+                approvers.append(reviewer)
+        approvers.sort()
         people.update(approvers)
         in_period.append(pr.get("number"))
         if not approvers:

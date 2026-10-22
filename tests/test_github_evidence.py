@@ -2,6 +2,7 @@
 import json
 import shutil
 
+import pytest
 from conftest import AS_OF, FIXTURES, load_script, run_json, run_main
 
 mod = load_script("github-change-control-evidence", "github_evidence.py")
@@ -52,6 +53,66 @@ def test_self_approval_does_not_count(tmp_path):
             "reviews": [{"author": {"login": "dev-alice"}, "state": "APPROVED"}]}]
     (tmp_path / "gh" / "pulls-merged.json").write_text(json.dumps(prs), encoding="utf-8")
     _, _, r = rows(tmp_path / "gh")
+    assert r["GH-PR-APPROVED"]["state"] == "contradicted"
+
+
+def test_only_latest_review_per_reviewer_counts(tmp_path):
+    work = tmp_path / "gh"
+    shutil.copytree(GH / "protected", work)
+    shutil.copyfile(GH / "superseded-reviews.json", work / "pulls-merged.json")
+    _, out, r = rows(work)
+    row = r["GH-PR-APPROVED"]
+    assert row["state"] == "contradicted"
+    assert "#301" in row["citations"][0]["value"] and "#302" not in row["citations"][0]["value"]
+    assert out["population"]["without_independent_approval"] == 1
+
+
+@pytest.mark.parametrize(("state", "expected"), [
+    ("CHANGES_REQUESTED", "contradicted"),
+    ("DISMISSED", "contradicted"),
+    ("COMMENTED", "contradicted"),
+    ("APPROVED", "supported"),
+])
+@pytest.mark.parametrize("timestamps", [True, False])
+def test_latest_reviewer_state_with_and_without_timestamps(tmp_path, state, expected, timestamps):
+    work = tmp_path / "gh"
+    shutil.copytree(GH / "protected", work)
+    reviews = [
+        {"author": {"login": "dev-bob"}, "state": "APPROVED"},
+        {"author": {"login": "dev-bob"}, "state": state},
+    ]
+    if timestamps:
+        reviews[0]["submittedAt"] = "2026-08-01T08:00:00Z"
+        reviews[1]["submittedAt"] = "2026-08-01T10:00:00+01:00"
+        reviews.reverse()  # Saved reviews need not arrive in chronological order.
+    prs = [{"number": 1, "author": {"login": "dev-alice"}, "mergedAt": "2026-08-01T10:00:00Z",
+            "reviews": reviews}]
+    (work / "pulls-merged.json").write_text(json.dumps(prs), encoding="utf-8")
+    _, _, r = rows(work)
+    assert r["GH-PR-APPROVED"]["state"] == expected
+
+
+def test_missing_reviewer_identity_is_not_an_independent_approval(tmp_path):
+    work = tmp_path / "gh"
+    shutil.copytree(GH / "protected", work)
+    prs = [{"number": 1, "author": {"login": "dev-alice"}, "mergedAt": "2026-08-01T10:00:00Z",
+            "reviews": [{"state": "APPROVED"}]}]
+    (work / "pulls-merged.json").write_text(json.dumps(prs), encoding="utf-8")
+    _, _, r = rows(work)
+    assert r["GH-PR-APPROVED"]["state"] == "contradicted"
+
+
+@pytest.mark.parametrize("timestamp", [None, "invalid", "2026-08-01T08:00:00Z"])
+def test_missing_invalid_or_equal_timestamps_use_export_order(tmp_path, timestamp):
+    work = tmp_path / "gh"
+    shutil.copytree(GH / "protected", work)
+    prs = [{"number": 1, "author": {"login": "dev-alice"}, "mergedAt": "2026-08-01T10:00:00Z",
+            "reviews": [
+                {"author": {"login": "dev-bob"}, "state": "APPROVED", "submittedAt": "2026-08-01T08:00:00Z"},
+                {"author": {"login": "dev-bob"}, "state": "DISMISSED", "submittedAt": timestamp},
+            ]}]
+    (work / "pulls-merged.json").write_text(json.dumps(prs), encoding="utf-8")
+    _, _, r = rows(work)
     assert r["GH-PR-APPROVED"]["state"] == "contradicted"
 
 
