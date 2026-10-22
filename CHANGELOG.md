@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows Keep
 
 ## [Unreleased]
 
+### Fixed
+
+- `github-change-control-evidence`: `GH-PR-APPROVED` counts only each reviewer's latest review, so superseded or dismissed approvals no longer support the row; absent identities do not count as independent reviewers (#6).
+
 ## [0.6.0] - 2026-10-20
 
 ### Added
