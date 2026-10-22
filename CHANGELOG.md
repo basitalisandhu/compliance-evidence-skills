@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows Keep
 
 ## [Unreleased]
 
+### Fixed
+
+- `github-change-control-evidence`: `GH-PR-APPROVED` counts only each reviewer's latest review, so superseded or dismissed approvals no longer support the row; absent identities do not count as independent reviewers (#6).
+
 ## [0.7.0] - 2026-10-26
 
 ### Added
@@ -14,6 +18,13 @@ All notable changes to this project are documented here. The format follows Keep
 
 - Version 0.7.0 in `pyproject.toml`, `plugin.json`, `marketplace.json`, the dispatcher, the pack builder's tool string and the README container examples; the READMEs, plugin and marketplace descriptions list eleven skills and a sample output section for the new one.
 
+||||||| parent of 0e881c5 (Count only each reviewer latest state in approval evidence)
+=======
+### Fixed
+
+- `github-change-control-evidence`: `GH-PR-APPROVED` counts only each reviewer's latest review, so superseded or dismissed approvals no longer support the row; absent identities do not count as independent reviewers (#6).
+
+>>>>>>> 0e881c5 (Count only each reviewer latest state in approval evidence)
 ## [0.6.0] - 2026-10-20
 
 ### Added
