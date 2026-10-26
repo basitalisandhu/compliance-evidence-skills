@@ -1,0 +1,22 @@
+[
+  {
+    "control": "5.1",
+    "applicable": "yes",
+    "justification": "Customer contracts",
+    "status": "implemented",
+    "evidence": [
+      "policies/information-security-policy.md"
+    ],
+    "owner": "Head of IT",
+    "last reviewed": "2026-05-01"
+  },
+  {
+    "control": "A 7.3",
+    "applicable": "no",
+    "justification": "",
+    "status": "",
+    "evidence": [],
+    "owner": "",
+    "last reviewed": "2026-05-01"
+  }
+]

@@ -1,0 +1,7 @@
+Risk ID,Risk,Treatment,Owner
+R-01,Customer data exposed through stolen credentials,"Reduce: A.8.5, A.5.17 and A.5.15",Head of IT
+R-02,Data lost after a hosting failure,Reduce: A.8.13 and A.5.30,CTO
+R-03,Laptop lost or stolen,Reduce: A.8.1 (device management) and A.5.9,Operations lead
+R-04,Staff fall for phishing,Reduce: A.6.3 and A.8.7,People lead
+R-05,Supplier outage or breach,"Reduce: A.5.19, A.5.21 and A.5.22",Head of IT
+R-06,Unreviewed change breaks production,Reduce: A.8.32 and A.8.25,CTO

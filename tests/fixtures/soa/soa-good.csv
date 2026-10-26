@@ -1,0 +1,94 @@
+Control,Applicable,Justification,Implementation status,Evidence,Owner,Last reviewed
+A.5.1,Yes,Treats risk R-01 in the risk register; also a customer contract requirement.,Implemented,policies/information-security-policy.md,Head of IT,2026-03-15
+A.5.2,Yes,Treats risk R-02 in the risk register; also a customer contract requirement.,Implemented,policies/acceptable-use.md,Head of IT,2026-03-15
+A.5.3,Yes,Treats risk R-03 in the risk register; also a customer contract requirement.,Implemented,registers/asset-register.csv,Head of IT,2026-03-15
+A.5.4,Yes,Treats risk R-04 in the risk register; also a customer contract requirement.,Implemented,registers/supplier-register.csv,Head of IT,2026-03-15
+A.5.5,Yes,Treats risk R-05 in the risk register; also a customer contract requirement.,Partially implemented,,Head of IT,2026-03-15
+A.5.6,Yes,Treats risk R-06 in the risk register; also a customer contract requirement.,Implemented,records/awareness-training-2026.csv,Head of IT,2026-03-15
+A.5.7,Yes,Treats risk R-01 in the risk register; also a customer contract requirement.,Implemented,records/incident-log-2026.csv,Head of IT,2026-03-15
+A.5.8,Yes,Treats risk R-02 in the risk register; also a customer contract requirement.,Planned,,Head of IT,2026-03-15
+A.5.9,Yes,Treats risk R-03 in the risk register; also a customer contract requirement.,Implemented,exports/backup-jobs.json,Head of IT,2026-03-15
+A.5.10,Yes,Treats risk R-04 in the risk register; also a customer contract requirement.,Implemented,exports/endpoint-compliance.json,Head of IT,2026-03-15
+A.5.11,Yes,Treats risk R-05 in the risk register; also a customer contract requirement.,Implemented,policies/information-security-policy.md,Head of IT,2026-03-15
+A.5.12,Yes,Treats risk R-06 in the risk register; also a customer contract requirement.,Implemented,policies/acceptable-use.md,Head of IT,2026-03-15
+A.5.13,Yes,Treats risk R-01 in the risk register; also a customer contract requirement.,Implemented,registers/asset-register.csv,Head of IT,2026-03-15
+A.5.14,Yes,Treats risk R-02 in the risk register; also a customer contract requirement.,Partially implemented,,Head of IT,2026-03-15
+A.5.15,Yes,Treats risk R-03 in the risk register; also a customer contract requirement.,Implemented,records/access-review-2026-q2.csv,Head of IT,2026-03-15
+A.5.16,Yes,Treats risk R-04 in the risk register; also a customer contract requirement.,Implemented,records/awareness-training-2026.csv,Head of IT,2026-03-15
+A.5.17,Yes,Treats risk R-05 in the risk register; also a customer contract requirement.,Implemented,records/incident-log-2026.csv,Head of IT,2026-03-15
+A.5.18,Yes,Treats risk R-06 in the risk register; also a customer contract requirement.,Implemented,exports/mfa-report.json,Head of IT,2026-03-15
+A.5.19,Yes,Treats risk R-01 in the risk register; also a customer contract requirement.,Implemented,exports/backup-jobs.json,Head of IT,2026-03-15
+A.5.20,Yes,Treats risk R-02 in the risk register; also a customer contract requirement.,Implemented,exports/endpoint-compliance.json,Head of IT,2026-03-15
+A.5.21,Yes,Treats risk R-03 in the risk register; also a customer contract requirement.,Planned,,Head of IT,2026-03-15
+A.5.22,Yes,Treats risk R-04 in the risk register; also a customer contract requirement.,Implemented,policies/acceptable-use.md,Head of IT,2026-03-15
+A.5.23,Yes,Treats risk R-05 in the risk register; also a customer contract requirement.,Partially implemented,,Head of IT,2026-03-15
+A.5.24,Yes,Treats risk R-06 in the risk register; also a customer contract requirement.,Implemented,registers/supplier-register.csv,Head of IT,2026-03-15
+A.5.25,Yes,Treats risk R-01 in the risk register; also a customer contract requirement.,Implemented,records/access-review-2026-q2.csv,Head of IT,2026-03-15
+A.5.26,Yes,Treats risk R-02 in the risk register; also a customer contract requirement.,Implemented,records/awareness-training-2026.csv,Head of IT,2026-03-15
+A.5.27,Yes,Treats risk R-03 in the risk register; also a customer contract requirement.,Implemented,records/incident-log-2026.csv,Head of IT,2026-03-15
+A.5.28,Yes,Treats risk R-04 in the risk register; also a customer contract requirement.,Implemented,exports/mfa-report.json,Head of IT,2026-03-15
+A.5.29,Yes,Treats risk R-05 in the risk register; also a customer contract requirement.,Implemented,exports/backup-jobs.json,Head of IT,2026-03-15
+A.5.30,Yes,Treats risk R-06 in the risk register; also a customer contract requirement.,Implemented,exports/endpoint-compliance.json,Head of IT,2026-03-15
+A.5.31,Yes,Treats risk R-01 in the risk register; also a customer contract requirement.,Implemented,policies/information-security-policy.md,Head of IT,2026-03-15
+A.5.32,Yes,Treats risk R-02 in the risk register; also a customer contract requirement.,Partially implemented,,Head of IT,2026-03-15
+A.5.33,Yes,Treats risk R-03 in the risk register; also a customer contract requirement.,Implemented,registers/asset-register.csv,Head of IT,2026-03-15
+A.5.34,Yes,Treats risk R-04 in the risk register; also a customer contract requirement.,Planned,,Head of IT,2026-03-15
+A.5.35,Yes,Treats risk R-05 in the risk register; also a customer contract requirement.,Implemented,records/access-review-2026-q2.csv,Head of IT,2026-03-15
+A.5.36,Yes,Treats risk R-06 in the risk register; also a customer contract requirement.,Implemented,records/awareness-training-2026.csv,Head of IT,2026-03-15
+A.5.37,Yes,Treats risk R-01 in the risk register; also a customer contract requirement.,Implemented,records/incident-log-2026.csv,Head of IT,2026-03-15
+A.6.1,Yes,Treats risk R-02 in the risk register; also a customer contract requirement.,Implemented,exports/mfa-report.json,People lead,2026-03-15
+A.6.2,Yes,Treats risk R-03 in the risk register; also a customer contract requirement.,Implemented,exports/backup-jobs.json,People lead,2026-03-15
+A.6.3,Yes,Treats risk R-04 in the risk register; also a customer contract requirement.,Implemented,exports/endpoint-compliance.json,People lead,2026-03-15
+A.6.4,Yes,Treats risk R-05 in the risk register; also a customer contract requirement.,Partially implemented,,People lead,2026-03-15
+A.6.5,Yes,Treats risk R-06 in the risk register; also a customer contract requirement.,Implemented,policies/acceptable-use.md,People lead,2026-03-15
+A.6.6,Yes,Treats risk R-01 in the risk register; also a customer contract requirement.,Implemented,registers/asset-register.csv,People lead,2026-03-15
+A.6.7,Yes,Treats risk R-02 in the risk register; also a customer contract requirement.,Implemented,registers/supplier-register.csv,People lead,2026-03-15
+A.6.8,Yes,Treats risk R-03 in the risk register; also a customer contract requirement.,Implemented,records/access-review-2026-q2.csv,People lead,2026-03-15
+A.7.1,Yes,Treats risk R-04 in the risk register; also a customer contract requirement.,Implemented,records/awareness-training-2026.csv,Operations lead,2026-03-15
+A.7.2,Yes,Treats risk R-05 in the risk register; also a customer contract requirement.,Planned,,Operations lead,2026-03-15
+A.7.3,No,"Fully remote company: no offices or premises of our own (scope statement, section 2).",Not applicable,,Head of IT,2026-03-15
+A.7.4,No,Fully remote company: no premises to monitor; hosting sites are covered by the supplier's attestation (supplier register).,Not applicable,,Head of IT,2026-03-15
+A.7.5,Yes,Treats risk R-02 in the risk register; also a customer contract requirement.,Partially implemented,,Operations lead,2026-03-15
+A.7.6,No,"Fully remote company: no secure areas of our own (scope statement, section 2).",Not applicable,,Head of IT,2026-03-15
+A.7.7,Yes,Treats risk R-04 in the risk register; also a customer contract requirement.,Implemented,policies/acceptable-use.md,Operations lead,2026-03-15
+A.7.8,Yes,Treats risk R-05 in the risk register; also a customer contract requirement.,Implemented,registers/asset-register.csv,Operations lead,2026-03-15
+A.7.9,Yes,Treats risk R-06 in the risk register; also a customer contract requirement.,Implemented,registers/supplier-register.csv,Operations lead,2026-03-15
+A.7.10,Yes,Treats risk R-01 in the risk register; also a customer contract requirement.,Implemented,records/access-review-2026-q2.csv,Operations lead,2026-03-15
+A.7.11,Yes,Treats risk R-02 in the risk register; also a customer contract requirement.,Implemented,records/awareness-training-2026.csv,Operations lead,2026-03-15
+A.7.12,Yes,Treats risk R-03 in the risk register; also a customer contract requirement.,Implemented,records/incident-log-2026.csv,Operations lead,2026-03-15
+A.7.13,Yes,Treats risk R-04 in the risk register; also a customer contract requirement.,Implemented,exports/mfa-report.json,Operations lead,2026-03-15
+A.7.14,Yes,Treats risk R-05 in the risk register; also a customer contract requirement.,Partially implemented,,Operations lead,2026-03-15
+A.8.1,Yes,Treats risk R-06 in the risk register; also a customer contract requirement.,Planned,,CTO,2026-03-15
+A.8.2,Yes,Treats risk R-01 in the risk register; also a customer contract requirement.,Implemented,policies/information-security-policy.md,CTO,2026-03-15
+A.8.3,Yes,Treats risk R-02 in the risk register; also a customer contract requirement.,Implemented,policies/acceptable-use.md,CTO,2026-03-15
+A.8.4,Yes,Treats risk R-03 in the risk register; also a customer contract requirement.,Implemented,registers/asset-register.csv,CTO,2026-03-15
+A.8.5,Yes,Treats risk R-04 in the risk register; also a customer contract requirement.,Implemented,registers/supplier-register.csv,CTO,2026-03-15
+A.8.6,Yes,Treats risk R-05 in the risk register; also a customer contract requirement.,Implemented,records/access-review-2026-q2.csv,CTO,2026-03-15
+A.8.7,Yes,Treats risk R-06 in the risk register; also a customer contract requirement.,Implemented,records/awareness-training-2026.csv,CTO,2026-03-15
+A.8.8,Yes,Treats risk R-01 in the risk register; also a customer contract requirement.,Implemented,records/incident-log-2026.csv,CTO,2026-03-15
+A.8.9,Yes,Treats risk R-02 in the risk register; also a customer contract requirement.,Partially implemented,,CTO,2026-03-15
+A.8.10,Yes,Treats risk R-03 in the risk register; also a customer contract requirement.,Implemented,exports/backup-jobs.json,CTO,2026-03-15
+A.8.11,Yes,Treats risk R-04 in the risk register; also a customer contract requirement.,Implemented,exports/endpoint-compliance.json,CTO,2026-03-15
+A.8.12,Yes,Treats risk R-05 in the risk register; also a customer contract requirement.,Implemented,policies/information-security-policy.md,CTO,2026-03-15
+A.8.13,Yes,Treats risk R-06 in the risk register; also a customer contract requirement.,Implemented,policies/acceptable-use.md,CTO,2026-03-15
+A.8.14,Yes,Treats risk R-01 in the risk register; also a customer contract requirement.,Planned,,CTO,2026-03-15
+A.8.15,Yes,Treats risk R-02 in the risk register; also a customer contract requirement.,Implemented,registers/supplier-register.csv,CTO,2026-03-15
+A.8.16,Yes,Treats risk R-03 in the risk register; also a customer contract requirement.,Implemented,records/access-review-2026-q2.csv,CTO,2026-03-15
+A.8.17,Yes,Treats risk R-04 in the risk register; also a customer contract requirement.,Implemented,records/awareness-training-2026.csv,CTO,2026-03-15
+A.8.18,Yes,Treats risk R-05 in the risk register; also a customer contract requirement.,Partially implemented,,CTO,2026-03-15
+A.8.19,Yes,Treats risk R-06 in the risk register; also a customer contract requirement.,Implemented,exports/mfa-report.json,CTO,2026-03-15
+A.8.20,Yes,Treats risk R-01 in the risk register; also a customer contract requirement.,Implemented,exports/backup-jobs.json,CTO,2026-03-15
+A.8.21,Yes,Treats risk R-02 in the risk register; also a customer contract requirement.,Implemented,exports/endpoint-compliance.json,CTO,2026-03-15
+A.8.22,Yes,Treats risk R-03 in the risk register; also a customer contract requirement.,Implemented,policies/information-security-policy.md,CTO,2026-03-15
+A.8.23,Yes,Treats risk R-04 in the risk register; also a customer contract requirement.,Implemented,policies/acceptable-use.md,CTO,2026-03-15
+A.8.24,Yes,Treats risk R-05 in the risk register; also a customer contract requirement.,Implemented,registers/asset-register.csv,CTO,2026-03-15
+A.8.25,Yes,Treats risk R-06 in the risk register; also a customer contract requirement.,Implemented,registers/supplier-register.csv,CTO,2026-03-15
+A.8.26,Yes,Treats risk R-01 in the risk register; also a customer contract requirement.,Implemented,records/access-review-2026-q2.csv,CTO,2026-03-15
+A.8.27,Yes,Treats risk R-02 in the risk register; also a customer contract requirement.,Planned,,CTO,2026-03-15
+A.8.28,Yes,Treats risk R-03 in the risk register; also a customer contract requirement.,Implemented,records/incident-log-2026.csv,CTO,2026-03-15
+A.8.29,Yes,Treats risk R-04 in the risk register; also a customer contract requirement.,Implemented,exports/mfa-report.json,CTO,2026-03-15
+A.8.30,No,"All development is done by employees; no software work is outsourced (scope statement, section 4).",Not applicable,,Head of IT,2026-03-15
+A.8.31,Yes,Treats risk R-06 in the risk register; also a customer contract requirement.,Implemented,exports/endpoint-compliance.json,CTO,2026-03-15
+A.8.32,Yes,Treats risk R-01 in the risk register; also a customer contract requirement.,Implemented,policies/information-security-policy.md,CTO,2026-03-15
+A.8.33,Yes,Treats risk R-02 in the risk register; also a customer contract requirement.,Implemented,policies/acceptable-use.md,CTO,2026-03-15
+A.8.34,Yes,Treats risk R-03 in the risk register; also a customer contract requirement.,Implemented,registers/asset-register.csv,CTO,2026-03-15

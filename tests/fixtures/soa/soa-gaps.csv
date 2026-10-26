@@ -1,0 +1,20 @@
+Annex A ref;Control title;Applicable?;Reason;Status;Evidence location;Control owner;Review date
+A.5.1;Policies we keep;Yes;Board requirement and customer contracts;Implemented;policies/information-security-policy.md;Head of IT;2026-02-01
+A.5.15;Who gets access;Yes;Risk R-01;Implemented;records/access-review-2026-q2.csv;Head of IT;2026-02-01
+A.5.15;Who gets access (copy);Yes;Risk R-01;Implemented;;Head of IT;2026-02-01
+A.5.17;Passwords and keys;Yes;Risk R-01;Implemented;;Head of IT;2026-02-01
+A.5.18;Access reviews;Yes;;In progress;;Head of IT;2026-02-01
+A.5.19;Suppliers;Yes;Risk R-05;;;Head of IT;2026-02-01
+A.5.23;Cloud services;Partial;Hosting is in the cloud;Implemented;registers/supplier-register.csv;Head of IT;2026-02-01
+A.5.24;Incident planning;TBD;;;;;2026-02-01
+A.6.3;Training;Yes;Risk R-04;Implemented;records/awareness-training-2025.csv;People lead;2026-02-01
+A.7.4;Watching premises;No;;Not applicable;;;2026-02-01
+A.7.9;Kit off site;Yes;Risk R-03;Not applicable;;Operations lead;2026-02-01
+A.8.1;Laptops and phones;Yes;Risk R-03;Implemented;exports/endpoint-compliance.json;;2024-01-10
+A.8.5;Sign-in;Yes;Risk R-01;Implemented;"exports/mfa-report.json; https://intranet.example.com/mfa";CTO;next spring
+A.8.13;Backups;No;Backups are the hosting provider's job;Implemented;;CTO;2026-02-01
+A.8.16;Watching for attacks;Yes;Good practice;Planned;;CTO;2026-02-01
+A.8.32;Change control;Yes;Risk R-06;Implemented;../../outside/change-log.csv;CTO;2026-02-01
+A.12.4.1;Event logging (old numbering);Yes;Risk R-06;Implemented;;CTO;2026-02-01
+A.5.38;Made-up control;Yes;Risk R-01;Planned;;Head of IT;2026-02-01
+CC6.1;SOC 2 row pasted in;Yes;Customer request;Implemented;;CTO;2026-02-01
