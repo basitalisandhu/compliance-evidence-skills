@@ -4,6 +4,16 @@ All notable changes to this project are documented here. The format follows Keep
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-10-26
+
+### Added
+
+- `iso27001-soa-check`: `soa_check.py` lints an ISO/IEC 27001:2022 Statement of Applicability exported as CSV (comma, semicolon or tab; UTF-8 or UTF-16) or as a JSON list of rows. Columns are found by header name, with `--map FIELD=HEADER` overrides, and identifiers may be written A.5.1, 5.1 or A 5.1. It reports, with the line of each row: Annex A 2022 controls missing from the SoA (per theme), unknown, duplicate and 2013-style identifiers (three-part ids and clauses 9 to 18, with a note that the 2022 transition is needed), applicability that is not a clear yes or no, exclusions and inclusions without a justification, included controls with no implementation status or a status that contradicts the decision, implemented controls with no evidence reference, evidence paths that do not exist under `--evidence-root`, missing owners, and reviews older than `--max-age-days`. With `--risk-register` it lists risks treated by a control the SoA excludes and, as warnings, included controls that no risk or stated requirement refers to. A table counts Organisational, People, Physical and Technological controls separately, and rows with other identifiers are kept out of it. Ships the 93 identifiers only, no ISO titles or text. Markdown or JSON, `--out`, `--redact`, `--fail-on`. Exit 0 nothing at or above `--fail-on`, 1 findings, 2 bad input. 12 tests with a synthetic company's SoA, risk register and evidence folder. Dispatcher subcommand `soa`; the container check in CI runs its `--help`.
+
+### Changed
+
+- Version 0.7.0 in `pyproject.toml`, `plugin.json`, `marketplace.json`, the dispatcher, the pack builder's tool string and the README container examples; the READMEs, plugin and marketplace descriptions list eleven skills and a sample output section for the new one.
+
 ## [0.6.0] - 2026-10-20
 
 ### Added

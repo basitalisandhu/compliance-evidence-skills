@@ -15,7 +15,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-__version__ = "0.6.0"
+__version__ = "0.7.0"
 
 PROG = "compliance-evidence"
 ROOT = Path(__file__).resolve().parents[1]
@@ -77,6 +77,11 @@ COMMANDS: dict[str, tuple[str, str, str]] = {
         "evidence-collection-plan",
         "collection_plan.py",
         "Plan the evidence to collect per control (PBC list) and show what a pack leaves stale, missing or overdue",
+    ),
+    "soa": (
+        "iso27001-soa-check",
+        "soa_check.py",
+        "Check an ISO 27001:2022 Statement of Applicability for missing controls, justifications, status and evidence",
     ),
 }
 

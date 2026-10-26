@@ -2,7 +2,7 @@
 
 **Compliance evidence skills for Claude Code: build integrity-checked evidence packs from GitHub, AWS and Microsoft 365 exports, map them to ISO 27001 and SOC 2 control identifiers and the Essential Eight maturity levels, digest vendor SOC 2 reports and certificates, map Maester results to controls, plan which evidence to collect per control and track what is stale or overdue, and draft auditor narratives and security questionnaire answers that cite evidence or say not assessable.**
 
-compliance-evidence-skills is a Claude Code plugin marketplace with one plugin, `compliance-evidence`, holding ten skills. Each skill is a fixed procedure plus a tested Python script (standard library only). The skills tell Claude which read-only exports to take and which permission each needs; the scripts then work on the saved files: hash them into a pack with a manifest, map them to control identifiers, and draft narratives in which every evidence statement cites a file and field.
+compliance-evidence-skills is a Claude Code plugin marketplace with one plugin, `compliance-evidence`, holding eleven skills. Each skill is a fixed procedure plus a tested Python script (standard library only). The skills tell Claude which read-only exports to take and which permission each needs; the scripts then work on the saved files: hash them into a pack with a manifest, map them to control identifiers, and draft narratives in which every evidence statement cites a file and field.
 
 It is written for the people who prepare an ISO 27001 or SOC 2 assessment in a small or mid-sized organisation: engineers and IT administrators who own GitHub, AWS and Microsoft 365, and the security or compliance lead who has to hand evidence to an assessor. It exists because evidence is still mostly screenshots and loose exports with no record of who took them, when, or with which command, and because tools that turn an API error into a control failure (or a missing file into a pass) cost hours of argument during fieldwork. These skills keep three result states only, `supported`, `contradicted` and `not assessable`, and never mark a control supported without a cited evidence file and field.
 
@@ -68,10 +68,10 @@ This pack is also part of [claude-skills](https://github.com/basitalisandhu/clau
 The scripts are also published as one container image on GitHub Packages (linux/amd64 and linux/arm64) when a version is tagged. The entrypoint is `compliance-evidence <subcommand> [args]`; mount the files at `/work`, the working directory:
 
 ```bash
-docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.6.0 pack build evidence-2026-q3 --out pack-2026-q3
-docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.6.0 map pack-2026-q3 --framework soc2 \
+docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.7.0 pack build evidence-2026-q3 --out pack-2026-q3
+docker run --rm -v "$PWD:/work" ghcr.io/basitalisandhu/compliance-evidence-skills:0.7.0 map pack-2026-q3 --framework soc2 \
   --map /app/plugins/compliance-evidence/skills/control-map-from-exports/references/starter-map.yaml
-docker run --rm ghcr.io/basitalisandhu/compliance-evidence-skills:0.6.0 --help
+docker run --rm ghcr.io/basitalisandhu/compliance-evidence-skills:0.7.0 --help
 ```
 
 | Subcommand | Script (skill) |
@@ -91,10 +91,10 @@ docker run --rm ghcr.io/basitalisandhu/compliance-evidence-skills:0.6.0 --help
 Every subcommand passes its arguments to the script unchanged. The image has no pip dependencies and runs as uid 1000; on Linux add `--user "$(id -u):$(id -g)"` if the mounted folder is not writable by that uid. From a checkout, `python3 scripts/cli.py` is the same dispatcher. Released images are signed with cosign (keyless) and carry a build provenance attestation and an SPDX SBOM:
 
 ```bash
-cosign verify ghcr.io/basitalisandhu/compliance-evidence-skills:0.6.0 \
+cosign verify ghcr.io/basitalisandhu/compliance-evidence-skills:0.7.0 \
   --certificate-identity-regexp '^https://github.com/basitalisandhu/compliance-evidence-skills/' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com
-gh attestation verify oci://ghcr.io/basitalisandhu/compliance-evidence-skills:0.6.0 --owner basitalisandhu
+gh attestation verify oci://ghcr.io/basitalisandhu/compliance-evidence-skills:0.7.0 --owner basitalisandhu
 ```
 
 ## When to use this
@@ -109,6 +109,7 @@ gh attestation verify oci://ghcr.io/basitalisandhu/compliance-evidence-skills:0.
 - Which vendor SOC 2 reports, ISO 27001 certificates and bridge letters are expired, expiring, qualified or out of scope, and what each vendor owner has to chase: `vendor-attestation-digest`
 - Which ISO 27001 or SOC 2 controls a Maester run of Microsoft 365 tests supports or contradicts, with a control column on every test: `maester-control-map`
 - What evidence to collect for each control before the audit period starts, from which system, how, how often and by when, and later which items are stale or overdue: `evidence-collection-plan`
+- Whether the Statement of Applicability is ready for the assessor: all 93 Annex A 2022 controls, a clear decision and a justification for each, status, evidence that exists, owners, review dates and risks treated by excluded controls: `iso27001-soa-check`
 
 ## Skills
 
@@ -124,6 +125,7 @@ gh attestation verify oci://ghcr.io/basitalisandhu/compliance-evidence-skills:0.
 | `vendor-attestation-digest` | "which vendor SOC 2 reports are out of date?", supplier reviews, an audit request for vendor assurance | `vendor_attestations.py`: per vendor and document state, 12 finding types (expired, coverage gap without a bridge letter, qualified opinion, exceptions, scope mismatch, unreviewed user entity controls, missing fields), owner actions by criticality, source document hashes |
 | `maester-control-map` | "which ISO 27001 controls do our Maester results support?", a control column on Maester results | `maester_map.py`: per control state from mapped tests (Skipped, NotRun, Error and Investigate never count as support), the test list as CSV with control columns, unmapped tests and unmatched map rows, the run's hash and a stale warning |
 | `evidence-collection-plan` | "what evidence do we need for this audit?", building the PBC list, chasing stale or overdue evidence | `collection_plan.py`: about 30 starter evidence requests selected by in-scope control, one row per quarter or month with owner, read-only way to obtain it and due date; against a pack manifest each row is met, stale, missing or overdue and each control takes its worst row; Markdown, JSON or the PBC list as CSV |
+| `iso27001-soa-check` | "check our SoA", "is our Statement of Applicability ready?", moving an SoA from the 2013 to the 2022 Annex A | `soa_check.py`: findings with line numbers for missing, unknown, duplicate and 2013-style identifiers, unclear applicability, inclusions and exclusions without a justification, missing status, implemented controls without evidence, evidence paths that do not exist, owners, review age, and risks treated by excluded controls; counts per Annex A theme; identifiers only, no ISO text |
 
 ## Sample output: vendor attestations and Maester results
 
@@ -221,6 +223,54 @@ Framework iso27001-2022, audit period 2026-07-01 to 2026-12-31, evaluated as of 
 
 Exit 1: the training report is stale, an access review is overdue and A.7.4 has no request in the starter catalogue. The catalogue is a starting set, not a complete audit programme; the assessor decides what is sufficient.
 
+## Sample output: Statement of Applicability check
+
+From a checkout, on the synthetic fixtures (trimmed to the summary and some findings):
+
+```bash
+python3 plugins/compliance-evidence/skills/iso27001-soa-check/scripts/soa_check.py tests/fixtures/soa/soa-gaps.csv \
+  --evidence-root tests/fixtures/soa/evidence --risk-register tests/fixtures/soa/risk-register.csv --as-of 2026-10-26
+```
+
+```text
+19 rows, 15 of the 93 ISO/IEC 27001:2022 Annex A controls, 3 row(s) with other identifiers. Reviews measured to 2026-10-26.
+21 error(s), 9 warning(s).
+
+### By theme
+
+| Theme | Annex A | In SoA | Included | Excluded | Unclear | Implemented | Findings |
+|---|---|---|---|---|---|---|---|
+| Organisational (5.x) | 37 | 7 | 5 | 0 | 2 | 3 | 7 |
+| People (6.x) | 8 | 1 | 1 | 0 | 0 | 1 | 1 |
+| Physical (7.x) | 14 | 2 | 1 | 1 | 0 | 0 | 2 |
+| Technological (8.x) | 34 | 5 | 4 | 1 | 0 | 3 | 7 |
+
+Rows with 2013 or unknown identifiers are not counted in any theme.
+
+Evidence references: 5 file path(s) checked, 4 found, 1 not found, 1 not a file path (URLs and document names are not checked).
+
+Risk register tests/fixtures/soa/risk-register.csv: 6 risk(s) naming 14 Annex A control(s).
+
+### Findings
+
+| Severity | Rule | Control | Line | Detail |
+|---|---|---|---|---|
+...
+| error | duplicate-id | A.5.15 (Who gets access) | 4 | A.5.15 appears again (first on line 3) |
+| error | included-no-justification | A.5.18 (Access reviews) | 6 | included with no justification; the standard asks for a justification for inclusions as well as exclusions |
+| error | applicability-unclear | A.5.23 (Cloud services) | 8 | applicability 'Partial' is not a clear yes or no |
+| error | evidence-not-found | A.6.3 (Training) | 10 | evidence 'records/awareness-training-2025.csv' does not exist under tests/fixtures/soa/evidence |
+| error | excluded-no-justification | A.7.4 (Watching premises) | 11 | excluded with no justification for the exclusion |
+| error | review-overdue | A.8.1 (Laptops and phones) | 13 | last reviewed 2024-01-10, 1020 days before 2026-10-26 (limit 365) |
+| error | risk-treats-excluded | A.8.13 (Backups) | 15 | risk R-02 is treated with A.8.13, which the SoA excludes |
+| error | id-2013 | A.12.4.1 | 18 | 'A.12.4.1' is an ISO/IEC 27001:2013 identifier; the SoA needs the 2022 Annex A numbering (transition to the 2022 controls) |
+| error | unknown-id |  | 20 | 'CC6.1' is not an ISO/IEC 27001:2022 Annex A control; it is kept out of the theme counts |
+| warning | included-unreferenced | A.8.16 (Watching for attacks) | 16 | included, but no risk treatment names it and the justification names no legal, contractual or other requirement |
+...
+```
+
+Exit 1. The theme table counts only the 15 Annex A 2022 rows; the 2013 row, the unknown A.5.38 and the pasted SOC 2 row are reported but not counted.
+
 ## Result states
 
 - `supported`: every mapped check passed on files whose hashes match the manifest, and the result cites at least one file and field.
@@ -243,6 +293,7 @@ Covered:
 - Vendor assurance documents (SOC 2 Type 1 and Type 2 reports, ISO 27001 certificates, bridge letters, penetration test summaries) through a register whose fields you take from each document with the page number. The script does not read PDFs.
 - Maester results files (`Invoke-Maester -OutputJsonFile`), mapped to identifiers through a CSV you own; an example map to review is included.
 - Evidence collection planning: about 30 starter requests for common ISO/IEC 27001:2022 Annex A and SOC 2 identifiers (identifiers and short paraphrases only), matched to a pack manifest by request id or filename pattern. The script reads no file contents.
+- Statement of Applicability checks against the 93 ISO/IEC 27001:2022 Annex A identifiers (identifiers only; titles and text are not shipped), with an optional risk register and evidence folder. Evidence files are checked for existence, not read.
 
 Not covered:
 
