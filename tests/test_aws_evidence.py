@@ -2,6 +2,7 @@
 import json
 import shutil
 
+import pytest
 from conftest import AS_OF, FIXTURES, load_script, run_json, run_main
 
 mod = load_script("aws-identity-and-logging-evidence", "aws_evidence.py")
@@ -124,3 +125,94 @@ def test_unknown_config_key_is_bad_input(write):
 def test_markdown_has_disclaimer():
     rc, out, _ = run_main(mod, [str(AWS / "good"), "--as-of", AS_OF])
     assert rc == 0 and "Preparation for a human assessor" in out and "| supported | AWS-ROOT-MFA |" in out
+
+
+def test_stale_delivery_is_contradicted_and_cited(tmp_path):
+    work = tmp_path / "aws"
+    shutil.copytree(AWS / "good", work)
+    shutil.copyfile(AWS / "stale-delivery.json", work / "cloudtrail-status-org-trail.json")
+    rc, _, r = rows(work, "--fail-on", "contradicted", "--cite-prefix", "aws/")
+    row = r["AWS-CT-LOGGING"]
+    assert rc == 1 and row["state"] == "contradicted"
+    assert any(c["file"] == "aws/cloudtrail-status-org-trail.json" and c["field"] == "LatestDeliveryTime"
+               and "2026-10-03" in c["value"] for c in row["citations"])
+
+
+@pytest.mark.parametrize(("delivery", "state"), [
+    ("2026-10-04T23:00:00Z", "supported"),
+    ("2026-10-04T00:00:00Z", "supported"),
+    ("2026-10-03T23:59:59Z", "contradicted"),
+    ("2026-10-04T01:00:00+01:00", "supported"),
+    # A date-only --as-of covers the whole day: a delivery later the same day is still current.
+    ("2026-10-05T09:55:00Z", "supported"),
+    ("2026-10-05T23:59:59Z", "supported"),
+    (None, "not assessable"),
+    ("not-a-date", "not assessable"),
+    ("2026-10-06T00:00:00Z", "not assessable"),
+])
+def test_delivery_freshness_boundaries_and_gaps(tmp_path, delivery, state):
+    work = tmp_path / "aws"
+    shutil.copytree(AWS / "good", work)
+    status = {"IsLogging": True}
+    if delivery is not None:
+        status["LatestDeliveryTime"] = delivery
+    (work / "cloudtrail-status-org-trail.json").write_text(json.dumps(status), encoding="utf-8")
+    _, _, r = rows(work)
+    assert r["AWS-CT-LOGGING"]["state"] == state
+    if state == "not assessable":
+        assert r["AWS-CT-LOGGING"]["gaps"]
+
+
+def test_delivery_after_an_as_of_with_a_time_is_not_assessable(tmp_path):
+    work = tmp_path / "aws"
+    shutil.copytree(AWS / "good", work)
+    (work / "cloudtrail-status-org-trail.json").write_text(
+        json.dumps({"IsLogging": True, "LatestDeliveryTime": "2026-10-05T13:00:00Z"}), encoding="utf-8")
+    _, out = run_json(mod, [str(work), "--as-of", "2026-10-05T12:00:00Z", "--json"])
+    row = {r["check"]: r for r in out["rows"]}["AWS-CT-LOGGING"]
+    assert row["state"] == "not assessable" and row["gaps"]
+
+
+def test_delivery_threshold_is_configurable(tmp_path, write):
+    work = tmp_path / "aws"
+    shutil.copytree(AWS / "good", work)
+    shutil.copyfile(AWS / "stale-delivery.json", work / "cloudtrail-status-org-trail.json")
+    cfg = write("freshness.yaml", "max_delivery_age_hours: 48\n")
+    _, _, r = rows(work, "--config", str(cfg))
+    assert r["AWS-CT-LOGGING"]["state"] == "supported"
+
+
+def test_stopped_trail_remains_contradicted_without_delivery(tmp_path):
+    work = tmp_path / "aws"
+    shutil.copytree(AWS / "good", work)
+    (work / "cloudtrail-status-org-trail.json").write_text('{"IsLogging": false}', encoding="utf-8")
+    _, _, r = rows(work)
+    assert r["AWS-CT-LOGGING"]["state"] == "contradicted"
+
+
+@pytest.mark.parametrize("limit", ["-1", "true", '".nan"', ".nan", ".inf"])
+def test_invalid_delivery_threshold_is_bad_input(write, limit):
+    cfg = write("freshness.yaml", f"max_delivery_age_hours: {limit}\n")
+    rc, _, err = run_main(mod, [str(AWS / "good"), "--config", str(cfg)])
+    assert rc == 2 and "max_delivery_age_hours" in err
+
+
+def test_unreadable_delivery_status_is_not_assessable(tmp_path):
+    work = tmp_path / "aws"
+    shutil.copytree(AWS / "good", work)
+    (work / "cloudtrail-status-org-trail.err").write_text("AccessDenied: not allowed", encoding="utf-8")
+    _, _, r = rows(work)
+    assert r["AWS-CT-LOGGING"]["state"] == "not assessable"
+
+
+def test_stale_delivery_contradicts_even_when_another_trail_status_is_missing(tmp_path):
+    work = tmp_path / "aws"
+    shutil.copytree(AWS / "good", work)
+    shutil.copyfile(AWS / "stale-delivery.json", work / "cloudtrail-status-org-trail.json")
+    path = work / "cloudtrail-trails.json"
+    trails = json.loads(path.read_text(encoding="utf-8"))
+    trails["trailList"].append({"Name": "another-trail", "IsMultiRegionTrail": True})
+    path.write_text(json.dumps(trails), encoding="utf-8")
+    _, _, r = rows(work)
+    assert r["AWS-CT-LOGGING"]["state"] == "contradicted"
+    assert any("another-trail" in gap for gap in r["AWS-CT-LOGGING"]["gaps"])

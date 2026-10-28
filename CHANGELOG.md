@@ -4,6 +4,10 @@ All notable changes to this project are documented here. The format follows Keep
 
 ## [Unreleased]
 
+### Fixed
+
+- `aws-identity-and-logging-evidence`: `AWS-CT-LOGGING` checks `LatestDeliveryTime` against `--as-of` and configurable `max_delivery_age_hours` (default 24); stale deliveries contradict the row, while unknown or future delivery times are not assessable (#7).
+
 ## [0.7.0] - 2026-10-26
 
 ### Added
