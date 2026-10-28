@@ -51,7 +51,7 @@ import csv
 import io
 import math
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -162,7 +162,7 @@ def unreadable(folder: Folder, check: str, statement: str, rel: str, status: str
 
 # ---- CloudTrail -------------------------------------------------------------------------------------------------
 
-def cloudtrail_rows(folder: Folder, cfg: dict, now: datetime) -> list[dict]:
+def cloudtrail_rows(folder: Folder, cfg: dict, now: datetime, delivery_limit: datetime) -> list[dict]:
     max_age = cfg_number(cfg, "max_delivery_age_hours", 24)
     if not math.isfinite(max_age):
         raise InputError("config max_delivery_age_hours must be finite")
@@ -208,7 +208,7 @@ def cloudtrail_rows(folder: Folder, cfg: dict, now: datetime) -> list[dict]:
         delivered = parse_dt(sdata.get("LatestDeliveryTime"))
         if "LatestDeliveryTime" in sdata:
             cites.append(citation(folder.name(rel), "LatestDeliveryTime", sdata["LatestDeliveryTime"]))
-        if delivered is None or delivered > now:
+        if delivered is None or delivered > delivery_limit:
             states.append(NOT_ASSESSABLE)
             why = "missing or unparseable" if delivered is None else "later than --as-of"
             gaps.append(f"{folder.name(rel)}: LatestDeliveryTime is {why}")
@@ -422,10 +422,12 @@ def _region_row(check: str, s: str, states: list[str], cites: list[dict], gaps: 
 
 # ---- main -------------------------------------------------------------------------------------------------------
 
-def evaluate(folder_path: str, cfg: dict, now: datetime, prefix: str = "") -> dict:
+def evaluate(folder_path: str, cfg: dict, now: datetime, prefix: str = "",
+             delivery_limit: datetime | None = None) -> dict:
     folder = Folder(folder_path, prefix)
     people: set[str] = set()
-    rows = cloudtrail_rows(folder, cfg, now) + iam_rows(folder, cfg, now, people) + regional_rows(folder, cfg)
+    rows = (cloudtrail_rows(folder, cfg, now, delivery_limit if delivery_limit is not None else now)
+            + iam_rows(folder, cfg, now, people) + regional_rows(folder, cfg))
     regions, _ = folder.regions(cfg.get("regions") or [])
     return {"source": "aws", "folder": str(folder.path), "as_of": now.strftime("%Y-%m-%d"),
             "regions": sorted(regions), "summary": state_counts(rows), "rows": rows, "disclaimer": DISCLAIMER,
@@ -451,7 +453,11 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     try:
         cfg = load_config(args.config, CONFIG_KEYS)
-        report = evaluate(args.folder, cfg, as_of_datetime(args.as_of), args.cite_prefix)
+        now = as_of_datetime(args.as_of)
+        # A date-only --as-of covers that whole day: a delivery later the same day is still current.
+        delivery_limit = (now if args.as_of is None or "T" in args.as_of
+                          else now + timedelta(days=1) - timedelta(microseconds=1))
+        report = evaluate(args.folder, cfg, now, args.cite_prefix, delivery_limit)
     except InputError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2

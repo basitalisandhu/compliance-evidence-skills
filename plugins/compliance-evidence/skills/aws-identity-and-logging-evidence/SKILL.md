@@ -119,7 +119,9 @@ in-scope set with the user. For one region, the regional files can sit directly 
   `not assessable`. With `IsLogging: true`, `LatestDeliveryTime` must be no older than
   `max_delivery_age_hours` at `--as-of` (exactly the limit is accepted). An older delivery is
   `contradicted`; a missing, unparseable or future delivery time is `not assessable`. Both fields are
-  cited when present. A stopped trail remains `contradicted` even without a delivery time.
+  cited when present. A stopped trail remains `contradicted` even without a delivery time. A `--as-of`
+  given as a bare date covers to the end of that day, so a delivery later the same day still counts as
+  current; only a delivery on a later date is `not assessable`.
 - `AWS-ROOT-MFA` and `AWS-ROOT-ACCESS-KEYS` read the account summary and fall back to the credential report's root row.
 - `AWS-ACCESS-KEY-AGE` uses `access_key_N_last_rotated` against `--as-of`.
 - Regional rows cite one file per region and list per-region gaps.

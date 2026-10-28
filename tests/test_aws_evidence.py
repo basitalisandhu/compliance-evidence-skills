@@ -143,6 +143,9 @@ def test_stale_delivery_is_contradicted_and_cited(tmp_path):
     ("2026-10-04T00:00:00Z", "supported"),
     ("2026-10-03T23:59:59Z", "contradicted"),
     ("2026-10-04T01:00:00+01:00", "supported"),
+    # A date-only --as-of covers the whole day: a delivery later the same day is still current.
+    ("2026-10-05T09:55:00Z", "supported"),
+    ("2026-10-05T23:59:59Z", "supported"),
     (None, "not assessable"),
     ("not-a-date", "not assessable"),
     ("2026-10-06T00:00:00Z", "not assessable"),
@@ -158,6 +161,16 @@ def test_delivery_freshness_boundaries_and_gaps(tmp_path, delivery, state):
     assert r["AWS-CT-LOGGING"]["state"] == state
     if state == "not assessable":
         assert r["AWS-CT-LOGGING"]["gaps"]
+
+
+def test_delivery_after_an_as_of_with_a_time_is_not_assessable(tmp_path):
+    work = tmp_path / "aws"
+    shutil.copytree(AWS / "good", work)
+    (work / "cloudtrail-status-org-trail.json").write_text(
+        json.dumps({"IsLogging": True, "LatestDeliveryTime": "2026-10-05T13:00:00Z"}), encoding="utf-8")
+    _, out = run_json(mod, [str(work), "--as-of", "2026-10-05T12:00:00Z", "--json"])
+    row = {r["check"]: r for r in out["rows"]}["AWS-CT-LOGGING"]
+    assert row["state"] == "not assessable" and row["gaps"]
 
 
 def test_delivery_threshold_is_configurable(tmp_path, write):
