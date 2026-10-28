@@ -1,0 +1,21 @@
+[
+  {
+    "number": 301,
+    "author": {"login": "dev-alice"},
+    "mergedAt": "2026-08-01T10:00:00Z",
+    "reviews": [
+      {"author": {"login": "dev-bob"}, "state": "CHANGES_REQUESTED", "submittedAt": "2026-08-01T09:00:00Z"},
+      {"author": {"login": "dev-bob"}, "state": "APPROVED", "submittedAt": "2026-08-01T08:00:00Z"}
+    ]
+  },
+  {
+    "number": 302,
+    "author": {"login": "dev-alice"},
+    "mergedAt": "2026-08-01T10:00:00Z",
+    "reviews": [
+      {"author": {"login": "dev-bob"}, "state": "APPROVED", "submittedAt": "2026-08-01T08:00:00Z"},
+      {"author": {"login": "dev-bob"}, "state": "DISMISSED", "submittedAt": "2026-08-01T09:00:00Z"},
+      {"author": {"login": "dev-carol"}, "state": "APPROVED", "submittedAt": "2026-08-01T09:30:00Z"}
+    ]
+  }
+]
