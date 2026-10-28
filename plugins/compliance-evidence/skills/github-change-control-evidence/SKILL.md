@@ -109,9 +109,10 @@ holds exactly 30, 100 or 1000 entries. Add these files to the evidence pack side
 - `GH-PR-APPROVED` tests every merged pull request in the period; the citation names those without an approval from
   someone other than the author. Only the latest review per reviewer counts, ordered by `submittedAt`
   when all that reviewer's timestamps parse, otherwise by order in the export (last wins).
-  A later `CHANGES_REQUESTED`, `DISMISSED` or `COMMENTED` review replaces an earlier approval;
-  another reviewer's current approval still counts. Missing reviewer identities and self-approvals
-  do not count. `population` gives the counts for the assessor.
+  `COMMENTED` and `PENDING` reviews do not decide: a later `CHANGES_REQUESTED` or `DISMISSED`
+  review replaces an earlier approval; another reviewer's current approval still counts.
+  Missing reviewer identities and self-approvals do not count. `population` gives the counts
+  for the assessor.
 - `GH-ADMINS-INCLUDED` is only assessable from branch protection; ruleset bypass lists need an admin read of each
   ruleset and are left as a gap.
 - `GH-SIGNED-COMMITS` reads the last 100 commits on the branch; it is not a period population.

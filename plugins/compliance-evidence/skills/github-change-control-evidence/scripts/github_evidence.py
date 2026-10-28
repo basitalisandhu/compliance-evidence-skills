@@ -80,6 +80,7 @@ from _evidence import (  # noqa: E402
 )
 
 CONFIG_KEYS = {"min_reviews", "min_signed_ratio", "vuln_sla_days", "secret_alert_sla_days", "period"}
+DECISIVE_REVIEW_STATES = {"APPROVED", "CHANGES_REQUESTED", "DISMISSED"}
 CHANGE = {"iso27001": ["A.8.32"], "soc2": ["CC8.1"]}
 CTRL = {
     "GH-BRANCH-PROTECTION": CHANGE,
@@ -298,9 +299,14 @@ def pr_rows(folder: Folder, cfg: dict, people: set[str]) -> tuple[list[dict], di
         people.update(by_reviewer)
         approvers = []
         for reviewer, reviews in by_reviewer.items():
+            # COMMENTED and PENDING reviews leave the approval state in place; only
+            # APPROVED, CHANGES_REQUESTED and DISMISSED decide the latest state.
+            decisive = [r for r in reviews if r.get("state") in DECISIVE_REVIEW_STATES]
+            if not decisive:
+                continue
             # Use timestamps when all are parseable, otherwise keep export order.
-            dated = [(parse_dt(r.get("submittedAt")), i, r) for i, r in enumerate(reviews)]
-            latest = max(dated, key=lambda item: (item[0], item[1]))[2] if all(t for t, _, _ in dated) else reviews[-1]
+            dated = [(parse_dt(r.get("submittedAt")), i, r) for i, r in enumerate(decisive)]
+            latest = max(dated, key=lambda item: (item[0], item[1]))[2] if all(t for t, _, _ in dated) else decisive[-1]
             if reviewer != author and latest.get("state") == "APPROVED":
                 approvers.append(reviewer)
         approvers.sort()

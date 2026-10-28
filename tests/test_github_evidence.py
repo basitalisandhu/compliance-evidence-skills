@@ -70,7 +70,8 @@ def test_only_latest_review_per_reviewer_counts(tmp_path):
 @pytest.mark.parametrize(("state", "expected"), [
     ("CHANGES_REQUESTED", "contradicted"),
     ("DISMISSED", "contradicted"),
-    ("COMMENTED", "contradicted"),
+    ("COMMENTED", "supported"),
+    ("PENDING", "supported"),
     ("APPROVED", "supported"),
 ])
 @pytest.mark.parametrize("timestamps", [True, False])
